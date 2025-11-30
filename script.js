@@ -1,110 +1,132 @@
-let allData = [];
-
-// Risk mapping based on numeric values
-function returnCategory(val) {
-  val = Number(val);
-  if (val > 15) return "High";
-  if (val >= 8) return "Moderate";
-  return "Low";
-}
-
-function riskCategory(std) {
-  std = Number(std);
-  if (std > 20) return "High";
-  if (std >= 10) return "Moderate";
-  return "Low";
-}
-
-function adjRiskCategory(beta) {
-  beta = Number(beta);
-  if (beta > 0.7) return "High";
-  if (beta >= 0.3) return "Moderate";
-  return "Low";
-}
-
-function renderTable(rows) {
-  let html = `<table class="table">
-    <thead>
-      <tr>
-        <th>Fund Name</th>
-        <th>1Y Return %</th>
-        <th>Std Dev</th>
-        <th>Beta</th>
-      </tr>
-    </thead>
-    <tbody>`;
-
-  rows.forEach(r => {
-    html += `<tr>
-      <td>${r.Funds}</td>
-      <td>${r["Return (%)1 yr"]}</td>
-      <td>${r["Standard Deviation"]}</td>
-      <td>${r.Beta}</td>
-    </tr>`;
-  });
-
-  html += "</tbody></table>";
-  document.getElementById("tableWrap").innerHTML = html;
-}
-
-// Plot risk vs return scatter
-function drawScatter(rows) {
-  const trace = {
-    x: rows.map(r => Number(r["Standard Deviation"])),
-    y: rows.map(r => Number(r["Return (%)1 yr"])),
-    text: rows.map(r => r.Funds),
-    mode: "markers",
-    type: "scatter",
-    marker: { size: 12 }
-  };
-
-  const layout = {
-    title: "Risk vs Return",
-    xaxis: { title: "Standard Deviation (Risk)" },
-    yaxis: { title: "1Y Return (%)" }
-  };
-
-  Plotly.newPlot("scatter", [trace], layout, {responsive:true});
-}
-
-function applyFilters() {
-  const fType = document.getElementById("fundType").value;  // always cluster 0 for now
-  const rType = document.getElementById("returnType").value;
-  const riskT = document.getElementById("riskType").value;
-  const adjT = document.getElementById("adjRiskType").value;
-  const topN = Number(document.getElementById("topN").value);
-
-  // Step 1 — filter by cluster
-  let rows = allData.filter(r => String(r.cluster) === fType);
-
-  // Step 2 — filter by return category
-  rows = rows.filter(r => returnCategory(r["Return (%)1 yr"]) === rType);
-
-  // Step 3 — filter by risk category
-  rows = rows.filter(r => riskCategory(r["Standard Deviation"]) === riskT);
-
-  // Step 4 — filter by adjusted risk category
-  rows = rows.filter(r => adjRiskCategory(r.Beta) === adjT);
-
-  // Step 5 — sort by return (descending)
-  rows.sort((a,b) => Number(b["Return (%)1 yr"]) - Number(a["Return (%)1 yr"]));
-
-  // Step 6 — select top N
-  rows = rows.slice(0, topN);
-
-  renderTable(rows);
-  drawScatter(rows);
-}
+let fundData = [];
+let returnChart = null;
+let stdChart = null;
 
 // Load CSV
-Papa.parse("mutual_fund_recommendations.csv", {
-  download: true,
-  header: true,
-  skipEmptyLines: true,
-  complete: function(results) {
-    allData = results.data;
-    applyFilters();
-  }
-});
+fetch("mutual_fund_recommendations.csv")
+    .then(response => response.text())
+    .then(csv => {
+        fundData = parseCSV(csv);
+    });
 
-document.getElementById("applyBtn").addEventListener("click", applyFilters);
+function parseCSV(csv) {
+    const rows = csv.split("\n").map(r => r.trim()).filter(r => r.length > 0);
+    const headers = rows[0].split(",");
+
+    return rows.slice(1).map(row => {
+        const values = row.split(",");
+        const obj = {};
+        headers.forEach((h, i) => obj[h] = values[i]);
+        obj["cluster"] = Number(obj["cluster"]);
+        obj["Return (%)1 yr"] = Number(obj["Return (%)1 yr"]);
+        obj["Return (%)2 yrs"] = Number(obj["Return (%)2 yrs"]);
+        obj["Return (%)3 yrs"] = Number(obj["Return (%)3 yrs"]);
+        obj["Standard Deviation"] = Number(obj["Standard Deviation"]);
+        obj["Beta"] = Number(obj["Beta"]);
+        return obj;
+    });
+}
+
+// Category → Cluster mapping
+const clusterMap = {
+    "FoFs & Gold": 0,
+    "Equity": 1,
+    "Hybrid": 2,
+    "Debt": 3
+};
+
+function filterFunds() {
+    const fundType = document.getElementById("fundType").value;
+    const clusterNumber = clusterMap[fundType];
+    const topN = Number(document.getElementById("topN").value);
+
+    let filtered = fundData.filter(f => f.cluster === clusterNumber);
+
+    let resultDiv = document.getElementById("result");
+
+    if (filtered.length === 0) {
+        resultDiv.innerHTML = "<h3>No funds found</h3>";
+        clearCharts();
+        return;
+    }
+
+    filtered = filtered.slice(0, topN);
+
+    // Show table
+    resultDiv.innerHTML = `
+        <table>
+            <tr>
+                <th>Fund</th>
+                <th>3Y Return</th>
+                <th>Std Dev</th>
+                <th>Beta</th>
+            </tr>
+            ${filtered.map(f => `
+                <tr>
+                    <td>${f["Funds"]}</td>
+                    <td>${f["Return (%)3 yrs"]}</td>
+                    <td>${f["Standard Deviation"]}</td>
+                    <td>${f["Beta"]}</td>
+                </tr>
+            `).join("")}
+        </table>
+    `;
+
+    plotReturnChart(filtered);
+    plotStdChart(filtered);
+}
+
+function clearCharts() {
+    if (returnChart) returnChart.destroy();
+    if (stdChart) stdChart.destroy();
+}
+
+function plotReturnChart(funds) {
+    const labels = ["1Y Return", "2Y Return", "3Y Return"];
+
+    const datasets = funds.map(fund => ({
+        label: fund["Funds"],
+        data: [
+            fund["Return (%)1 yr"],
+            fund["Return (%)2 yrs"],
+            fund["Return (%)3 yrs"]
+        ],
+        fill: false,
+        tension: 0.2
+    }));
+
+    if (returnChart) returnChart.destroy();
+
+    const ctx = document.getElementById("returnChart").getContext("2d");
+    returnChart = new Chart(ctx, {
+        type: "line",
+        data: { labels, datasets },
+        options: {
+            responsive: true,
+            plugins: { title: { display: true, text: "Returns (1Y, 2Y, 3Y)" } }
+        }
+    });
+}
+
+function plotStdChart(funds) {
+    const labels = funds.map(f => f["Funds"]);
+    const values = funds.map(f => f["Standard Deviation"]);
+
+    if (stdChart) stdChart.destroy();
+
+    const ctx = document.getElementById("stdChart").getContext("2d");
+    stdChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels,
+            datasets: [{
+                label: "Standard Deviation",
+                data: values
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { title: { display: true, text: "Risk (Std. Deviation)" } }
+        }
+    });
+}
