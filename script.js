@@ -2,16 +2,13 @@ let data = [];
 let returnChart = null;
 let stdChart = null;
 
-// Load CSV file
+// Load CSV
 fetch("mutual_fund_recommendations.csv")
     .then(res => res.text())
-    .then(csv => {
-        data = parseCSV(csv);
-    });
+    .then(csv => data = parseCSV(csv));
 
-// Convert CSV → JSON
 function parseCSV(csv) {
-    const rows = csv.split("\n").filter(r => r.trim().length > 0);
+    const rows = csv.trim().split("\n");
     const headers = rows[0].split(",");
 
     return rows.slice(1).map(row => {
@@ -19,7 +16,7 @@ function parseCSV(csv) {
         let obj = {};
         headers.forEach((h, i) => obj[h] = cols[i]);
 
-        obj["cluster"] = Number(obj["cluster"]);
+        obj.cluster = Number(obj.cluster);
         obj["Return (%)1 yr"] = Number(obj["Return (%)1 yr"]);
         obj["Return (%)2 yrs"] = Number(obj["Return (%)2 yrs"]);
         obj["Return (%)3 yrs"] = Number(obj["Return (%)3 yrs"]);
@@ -29,42 +26,53 @@ function parseCSV(csv) {
     });
 }
 
-
 function showFunds() {
     const cluster = Number(document.getElementById("clusterSelect").value);
+    const topN = Number(document.getElementById("topN").value);
 
-    const filtered = data.filter(f => f.cluster === cluster);
+    let filtered = data.filter(f => f.cluster === cluster);
 
     const tableDiv = document.getElementById("fundTable");
     tableDiv.innerHTML = "";
 
     if (filtered.length === 0) {
-        tableDiv.innerHTML = "<h2>No funds found</h2>";
+        tableDiv.innerHTML = "<div class='no-data'>No funds found</div>";
         clearCharts();
         return;
     }
 
+    // Sort by 3Y return (descending)
+    filtered.sort((a, b) => b["Return (%)3 yrs"] - a["Return (%)3 yrs"]);
+
+    const topFunds = filtered.slice(0, topN);
+    const top5ForCharts = filtered.slice(0, 5);
+
+    // Create professional table
     tableDiv.innerHTML = `
-        <table>
-            <tr>
-                <th>Fund Name</th>
-                <th>Return 3Y</th>
-                <th>Std Dev</th>
-                <th>Beta</th>
-            </tr>
-            ${filtered.map(f => `
+        <table class="fund-table">
+            <thead>
                 <tr>
-                    <td>${f["Funds"]}</td>
-                    <td>${f["Return (%)3 yrs"]}</td>
-                    <td>${f["Standard Deviation"]}</td>
-                    <td>${f["Beta"]}</td>
+                    <th>Fund Name</th>
+                    <th>3Y Return (%)</th>
+                    <th>Std Dev</th>
+                    <th>Beta</th>
                 </tr>
-            `).join("")}
+            </thead>
+            <tbody>
+                ${topFunds.map(f => `
+                    <tr>
+                        <td>${f["Funds"]}</td>
+                        <td>${f["Return (%)3 yrs"]}</td>
+                        <td>${f["Standard Deviation"]}</td>
+                        <td>${f["Beta"]}</td>
+                    </tr>
+                `).join("")}
+            </tbody>
         </table>
     `;
 
-    plotReturnChart(filtered);
-    plotStdChart(filtered);
+    plotReturnChart(top5ForCharts);
+    plotStdChart(top5ForCharts);
 }
 
 function clearCharts() {
@@ -76,7 +84,6 @@ function plotReturnChart(funds) {
     if (returnChart) returnChart.destroy();
 
     const labels = ["1Y", "2Y", "3Y"];
-
     const datasets = funds.map(f => ({
         label: f["Funds"],
         data: [
@@ -84,49 +91,41 @@ function plotReturnChart(funds) {
             f["Return (%)2 yrs"],
             f["Return (%)3 yrs"]
         ],
+        borderWidth: 2,
         fill: false,
-        tension: 0.25
+        tension: 0.2
     }));
 
     const ctx = document.getElementById("returnChart").getContext("2d");
-
     returnChart = new Chart(ctx, {
         type: "line",
         data: { labels, datasets },
         options: {
             plugins: {
-                title: {
-                    display: true,
-                    text: "Returns (1Y, 2Y, 3Y)"
-                }
+                legend: { position: "bottom" },
             }
         }
     });
 }
 
 function plotStdChart(funds) {
-    if (stdChart) stdChart.destroy();
-
-    const labels = funds.map(f => f["Funds"]);
-    const values = funds.map(f => f["Standard Deviation"]);
+    if (stdChart) returnChart?.destroy();
 
     const ctx = document.getElementById("stdChart").getContext("2d");
-
     stdChart = new Chart(ctx, {
         type: "bar",
         data: {
-            labels,
+            labels: funds.map(f => f["Funds"]),
             datasets: [{
                 label: "Standard Deviation",
-                data: values
+                data: funds.map(f => f["Standard Deviation"]),
+                borderWidth: 1
             }]
         },
         options: {
+            indexAxis: 'y',
             plugins: {
-                title: {
-                    display: true,
-                    text: "Risk (Std. Deviation)"
-                }
+                legend: { display: false }
             }
         }
     });
