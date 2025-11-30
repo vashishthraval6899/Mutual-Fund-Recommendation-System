@@ -39,4 +39,27 @@
         <label>Adjusted Risk Type:</label>
         <select id="adjRiskType">
             <option value="High">High</option>
-            <option value="Mod
+            <option value="Moderate">Moderate</option>
+            <option value="Low">Low</option>
+        </select>
+
+        <label>Top N Funds:</label>
+        <select id="topN">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+        </select>
+
+        <button onclick="filterFunds()">Show</button>
+
+        <div id="result"></div>
+
+        <canvas id="returnChart"></canvas>
+        <canvas id="stdChart"></canvas>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
