@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mutual Fund Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Plotly for charts and PapaParse for CSV parsing -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Mutual Fund Dashboard</h1>
+
+    <div class="controls">
+      <label>Fund Type:
+        <select id="fundType">
+          <option value="0">FoFs & Gold (Cluster 0)</option>
+          <option value="1">Equity (Cluster 1)</option>
+          <option value="2">Hybrid (Cluster 2)</option>
+          <option value="3">Debt (Cluster 3)</option>
+        </select>
+      </label>
+
+      <label>Return Type:
+        <select id="returnType">
+          <option value="Return_1Y">1Y</option>
+          <option value="Return_3Y">3Y</option>
+          <option value="Return_5Y">5Y</option>
+        </select>
+      </label>
+
+      <label>Risk Type:
+        <select id="riskType">
+          <option value="Any">Any</option>
+          <option value="Low">Low</option>
+          <option value="Moderate">Moderate</option>
+          <option value="High">High</option>
+        </select>
+      </label>
+
+      <label>Adjusted Risk Type:
+        <select id="adjRiskType">
+          <option value="Any">Any</option>
+          <option value="Low">Low</option>
+          <option value="Moderate">Moderate</option>
+          <option value="High">High</option>
+        </select>
+      </label>
+
+      <label>Top N:
+        <select id="topN">
+          <option>5</option><option>10</option><option>15</option><option>20</option>
+        </select>
+      </label>
+
+      <button id="applyBtn">Show</button>
+    </div>
+
+    <h2>Top Funds</h2>
+    <div id="tableWrap"></div>
+
+    <div class="charts">
+      <div id="scatter" class="chart"></div>
+      <div id="bar" class="chart"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
