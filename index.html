@@ -4,62 +4,31 @@
     <meta charset="UTF-8">
     <title>Mutual Fund Recommender</title>
     <link rel="stylesheet" href="styles.css">
-
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
 
-    <h1>Mutual Fund Recommendation System</h1>
+    <h1>Mutual Fund Recommendation</h1>
 
-    <div class="container">
-
-        <label>Fund Type:</label>
-        <select id="fundType">
-            <option value="FoFs & Gold">FoFs & Gold</option>
-            <option value="Equity">Equity</option>
-            <option value="Hybrid">Hybrid</option>
-            <option value="Debt">Debt</option>
+    <div class="card">
+        <label>Select Fund Category</label>
+        <select id="clusterSelect">
+            <option value="0">FoFs & Gold Funds — Very High Return | Moderate Risk | High Adjusted Returns</option>
+            <option value="1">Equity Funds — High Return | High Risk | High Adjusted Returns</option>
+            <option value="2">Hybrid Funds — Moderate Return | Moderate Risk</option>
+            <option value="3">Debt Funds — Low Return | Low Risk</option>
         </select>
 
-        <label>Return Type:</label>
-        <select id="returnType">
-            <option value="High">High</option>
-            <option value="Moderate">Moderate</option>
-            <option value="Low">Low</option>
-        </select>
-
-        <label>Risk Type:</label>
-        <select id="riskType">
-            <option value="High">High</option>
-            <option value="Moderate">Moderate</option>
-            <option value="Low">Low</option>
-        </select>
-
-        <label>Adjusted Risk Type:</label>
-        <select id="adjRiskType">
-            <option value="High">High</option>
-            <option value="Moderate">Moderate</option>
-            <option value="Low">Low</option>
-        </select>
-
-        <label>Top N Funds:</label>
-        <select id="topN">
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-        </select>
-
-        <button onclick="filterFunds()">Show</button>
-
-        <div id="result"></div>
-
-        <canvas id="returnChart"></canvas>
-        <canvas id="stdChart"></canvas>
-
+        <button onclick="showFunds()">Show</button>
     </div>
+
+    <div id="fundTable"></div>
+
+    <canvas id="returnChart"></canvas>
+    <canvas id="stdChart"></canvas>
 
     <script src="script.js"></script>
 </body>
 </html>
+``
