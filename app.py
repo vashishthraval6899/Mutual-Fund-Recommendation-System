@@ -8,7 +8,7 @@ import plotly.express as px  # Recommended for interactive charts
 def load_data():
     # Replace 'your_data.csv' with the actual path to your data file
     # Ensure this file is in the same directory as app.py
-    df = pd.read_csv('your_data.csv') 
+    df = pd.read_csv('mutual_fund_recommendations.csv') 
     return df
 
 data = load_data()
