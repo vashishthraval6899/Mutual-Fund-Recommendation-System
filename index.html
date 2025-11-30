@@ -9,39 +9,43 @@
 
 <body>
 
-    <h1>Mutual Fund Performance Dashboard</h1>
+    <div class="container">
 
-    <div class="controls">
+        <h1>Mutual Fund Performance Dashboard</h1>
 
-        <div class="control-box">
-            <label>Select Category</label>
-            <select id="clusterSelect">
-                <option value="0">FoFs & Gold Funds — Very High Return | Moderate Risk</option>
-                <option value="1">Equity Funds — High Return | High Risk</option>
-                <option value="2">Hybrid Funds — Moderate Return | Moderate Risk</option>
-                <option value="3">Debt Funds — Low Return | Low Risk</option>
-            </select>
+        <div class="controls">
+
+            <div class="control-box">
+                <label>Select Category</label>
+                <select id="clusterSelect">
+                    <option value="0">FoFs & Gold Funds — Very High Return | Moderate Risk</option>
+                    <option value="1">Equity Funds — High Return | High Risk</option>
+                    <option value="2">Hybrid Funds — Moderate Return | Moderate Risk</option>
+                    <option value="3">Debt Funds — Low Return | Low Risk</option>
+                </select>
+            </div>
+
+            <div class="control-box">
+                <label>Select Top N Funds</label>
+                <select id="topN">
+                    <option value="5">Top 5</option>
+                    <option value="10">Top 10</option>
+                    <option value="15">Top 15</option>
+                </select>
+            </div>
+
+            <button id="loadBtn">Show Results</button>
         </div>
 
-        <div class="control-box">
-            <label>Select Top N Funds</label>
-            <select id="topN">
-                <option value="5">Top 5</option>
-                <option value="10">Top 10</option>
-                <option value="15">Top 15</option>
-            </select>
-        </div>
+        <div id="fundTable"></div>
 
-        <button onclick="showFunds()">Show Results</button>
+        <h2 class="chart-title">Return Performance</h2>
+        <canvas id="returnChart"></canvas>
+
+        <h2 class="chart-title">Risk (Standard Deviation)</h2>
+        <canvas id="stdChart"></canvas>
+
     </div>
-
-    <div id="fundTable"></div>
-
-    <h2 class="chart-title">Return Performance (Top 5 Funds)</h2>
-    <canvas id="returnChart"></canvas>
-
-    <h2 class="chart-title">Standard Deviation (Risk)</h2>
-    <canvas id="stdChart"></canvas>
 
     <script src="script.js"></script>
 </body>
