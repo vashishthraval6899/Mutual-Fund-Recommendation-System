@@ -1,69 +1,42 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Mutual Fund Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <title>Mutual Fund Recommender</title>
+    <link rel="stylesheet" href="styles.css">
 
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
-  <div class="container">
-    <h1>Mutual Fund Explorer</h1>
 
-    <div class="controls">
+    <h1>Mutual Fund Recommendation System</h1>
 
-      <label>Fund Type:
+    <div class="container">
+
+        <label>Fund Type:</label>
         <select id="fundType">
-          <option value="0">FoFs & Gold Funds</option>
+            <option value="FoFs & Gold">FoFs & Gold</option>
+            <option value="Equity">Equity</option>
+            <option value="Hybrid">Hybrid</option>
+            <option value="Debt">Debt</option>
         </select>
-      </label>
 
-      <label>Return Type:
+        <label>Return Type:</label>
         <select id="returnType">
-          <option value="High">High</option>
-          <option value="Moderate">Moderate</option>
-          <option value="Low">Low</option>
+            <option value="High">High</option>
+            <option value="Moderate">Moderate</option>
+            <option value="Low">Low</option>
         </select>
-      </label>
 
-      <label>Risk Type:
+        <label>Risk Type:</label>
         <select id="riskType">
-          <option value="High">High</option>
-          <option value="Moderate">Moderate</option>
-          <option value="Low">Low</option>
+            <option value="High">High</option>
+            <option value="Moderate">Moderate</option>
+            <option value="Low">Low</option>
         </select>
-      </label>
 
-      <label>Adjusted Risk Type:
+        <label>Adjusted Risk Type:</label>
         <select id="adjRiskType">
-          <option value="High">High</option>
-          <option value="Moderate">Moderate</option>
-          <option value="Low">Low</option>
-        </select>
-      </label>
-
-      <label>Top N:
-        <select id="topN">
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-        </select>
-      </label>
-
-      <button id="applyBtn">Show</button>
-    </div>
-
-    <h2>Top Funds</h2>
-    <div id="tableWrap"></div>
-
-    <h2>Charts</h2>
-    <div id="scatter" class="chart"></div>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+            <option value="High">High</option>
+            <option value="Mod
