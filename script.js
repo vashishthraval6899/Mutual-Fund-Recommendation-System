@@ -53,11 +53,16 @@ function showFunds() {
         return;
     }
 
-    // Render Table with formatting
+    // --- Prepare Data for Table and Charts ---
+    // The table will show all funds, but the charts will be limited to top 10.
+    const chartData = filtered.slice(0, 10);
+
+    // Render Table with formatting and Ranks
     tableDiv.innerHTML = `
         <table>
             <thead>
                 <tr>
+                    <th>Rank</th>
                     <th>Fund Name</th>
                     <th>Return (1Y)</th>
                     <th>Return (3Y)</th>
@@ -66,8 +71,9 @@ function showFunds() {
                 </tr>
             </thead>
             <tbody>
-            ${filtered.map(f => `
+            ${filtered.map((f, index) => `
                 <tr>
+                    <td style="font-weight:600; color:var(--text-muted);">${index + 1}</td>
                     <td class="fund-name">${f["Funds"]}</td>
                     <td>${f["Return (%)1 yr"].toFixed(2)}%</td>
                     <td style="font-weight:bold; color: ${f["Return (%)3 yrs"] > 0 ? '#16a34a' : '#dc2626'}">
@@ -81,8 +87,9 @@ function showFunds() {
         </table>
     `;
 
-    plotReturnChart(filtered);
-    plotStdChart(filtered);
+    // Plot charts using the limited data set
+    plotReturnChart(chartData);
+    plotStdChart(chartData);
     
     // Smooth scroll to results
     dashboard.scrollIntoView({ behavior: 'smooth' });
@@ -150,7 +157,8 @@ function plotReturnChart(funds) {
 function plotStdChart(funds) {
     if (stdChart) stdChart.destroy();
 
-    const labels = funds.map(f => f["Funds"]);
+    // Use rank as the label for clarity, and the fund name in the tooltip
+    const labels = funds.map((f, index) => `Rank ${index + 1}`); 
     const values = funds.map(f => f["Standard Deviation"]);
 
     const ctx = document.getElementById("stdChart").getContext("2d");
@@ -169,7 +177,7 @@ function plotStdChart(funds) {
                 data: values,
                 backgroundColor: gradient,
                 borderRadius: 6,
-                barPercentage: 0.6,
+                barPercentage: 0.8,
             }]
         },
         options: {
@@ -178,6 +186,15 @@ function plotStdChart(funds) {
             plugins: {
                 legend: { display: false },
                 tooltip: {
+                    // Show the actual fund name in the tooltip
+                    callbacks: {
+                         title: (tooltipItem) => {
+                             return funds[tooltipItem[0].dataIndex].Funds;
+                         },
+                         label: (tooltipItem) => {
+                             return `Risk (Std. Dev): ${tooltipItem.formattedValue}`;
+                         }
+                    },
                     backgroundColor: 'rgba(255, 255, 255, 0.9)',
                     titleColor: '#1e293b',
                     bodyColor: '#475569',
@@ -191,8 +208,7 @@ function plotStdChart(funds) {
                     grid: { color: '#f1f5f9' }
                 },
                 x: {
-                    grid: { display: false },
-                    ticks: { display: false } // Hide X labels if names are too long
+                    grid: { display: false }
                 }
             }
         }
