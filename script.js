@@ -8,8 +8,8 @@ const colors = [
     '#d97706', '#65a30d', '#059669', '#0891b2', '#4f46e5'
 ];
 
-// Load CSV file
-fetch("mutual_fund_recommendations.csv")
+// Load CSV file - ***UPDATED FILENAME HERE***
+fetch("Top_Funds_Cluster_Wise.csv")
     .then(res => res.text())
     .then(csv => {
         data = parseCSV(csv);
@@ -26,7 +26,7 @@ function parseCSV(csv) {
         let obj = {};
         headers.forEach((h, i) => obj[h] = cols[i]);
 
-        // Clean numbers
+        // Clean numbers (Keys match your new CSV headers: cluster, Return (%)1 yr, etc.)
         obj["cluster"] = Number(obj["cluster"]);
         obj["Return (%)1 yr"] = parseFloat(obj["Return (%)1 yr"]);
         obj["Return (%)2 yrs"] = parseFloat(obj["Return (%)2 yrs"]);
