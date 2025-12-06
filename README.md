@@ -9,4 +9,5 @@ This project builds an intelligent Mutual Fund Recommendation Engine using:
 - Unsupervised ML (KMeans, GMM, Agglomerative, DBSCAN)
 - Risk–Return profiling
 - Fund ranking using Quality Score
+  
 It groups 1158 mutual funds into smart investor-friendly clusters and recommends the top funds in each.
