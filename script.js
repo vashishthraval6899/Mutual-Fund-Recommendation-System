@@ -90,6 +90,62 @@ function showFunds() {
     // Plot charts using the limited data set
     plotReturnChart(chartData);
     plotStdChart(chartData);
+
+    // ================== AI RISK API INTEGRATION (NEW) ==================
+    async function getAIRecommendation() {
+    
+        const userData = {
+            age: Number(document.getElementById("age").value),
+            horizon: Number(document.getElementById("horizon").value),
+            job_stability: "stable",   // fixed for now
+            income: 50000,             // fixed for now
+            risk_tolerance: document.getElementById("risk_tolerance").value,
+            emergency_fund: document.getElementById("emergency_fund").value,
+            market_exp: document.getElementById("market_exp").value
+        };
+    
+        // Validation
+        if (!userData.age || !userData.horizon) {
+            alert("Please enter Age and Investment Horizon");
+            return;
+        }
+    
+        try {
+            const response = await fetch(
+                "https://YOUR-RENDER-URL.onrender.com/predict-risk",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(userData)
+                }
+            );
+    
+            const result = await response.json();
+    
+            console.log("AI Recommendation:", result);
+    
+            // Use first recommended cluster
+            const cluster = result.recommended_clusters[0];
+    
+            // Auto-select cluster
+            document.getElementById("clusterSelect").value = cluster;
+    
+            // Reuse existing logic
+            showFunds();
+    
+            alert(
+                `AI Risk Level: ${result.final_risk.toUpperCase()}
+    Decision Source: ${result.decision_source}`
+            );
+    
+        } catch (error) {
+            console.error("AI API error:", error);
+            alert("AI service unavailable. Please select manually.");
+        }
+    }
+
+// ================== END AI INTEGRATION ==================
+
     
     // Smooth scroll to results
     dashboard.scrollIntoView({ behavior: 'smooth' });
