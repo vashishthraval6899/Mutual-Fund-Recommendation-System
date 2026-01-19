@@ -58,11 +58,6 @@ async function submitForm() {
       }
     );
 
-    const data = await response.json();
-    document.getElementById("result").innerHTML = `
-  ✅ <b>Recommended Cluster:</b> ${data.recommended_cluster}<br>
-  📊 <b>Confidence:</b> ${(data.confidence * 100).toFixed(2)}%
-`;
 
   } catch (err) {
     console.error("Prediction failed:", err);
