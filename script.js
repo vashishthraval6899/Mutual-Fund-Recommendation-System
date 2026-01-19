@@ -1,30 +1,40 @@
 const FUND_DATA = {
   "Growth & Stability": [
-    { name: "ICICI Pru Pharma Healthcare (G)", cat: "Equity", returns: [5.36, 29.94, 26.65], aum: "6,226 Cr", expense: "1.87%", beta: 0.76, sharpe: 0.43, insight: "Exceptional efficiency (Sharpe 0.43). Perfect for investors seeking high sector-specific growth with lower volatility than its peers." },
-    { name: "Kotak Nifty Midcap 50 ETF", cat: "Equity", returns: [10.29, 23.2, 25.36], aum: "80 Cr", expense: "0.05%", beta: 1.0, sharpe: 0.36, insight: "Ultra-low cost structure. Captures mid-cap momentum effectively for long-term compounding." },
-    { name: "HDFC Flexi Cap Fund (G)", cat: "Equity", returns: [10.33, 24.96, 21.89], aum: "85,559 Cr", expense: "1.37%", beta: 0.82, sharpe: 0.43, insight: "One of the largest funds. Its flexi-cap mandate allows it to shift between large and mid-caps to protect capital." },
-    { name: "Parag Parikh Flexi Cap Fund", cat: "Equity", returns: [8.68, 21.08, 21.65], aum: "1.19L Cr", expense: "1.28%", beta: 0.57, sharpe: 0.49, insight: "Best-in-class risk management. The low Beta (0.57) makes it incredibly stable during market downturns." }
+    { name: "DSP Credit Risk Fund-Reg(G)", cat: "Debt", returns: [21.58, 14.47, 14.87], aum: "208 Cr", expense: "1.2%", beta: 0.18, sharpe: 0.29, insight: "Market-leading Debt pick with a Quant Quality Score of 78%." },
+    { name: "ICICI Pru BSE Sensex ETF", cat: "Equity", returns: [7.18, 15.15, 12.4], aum: "23,155 Cr", expense: "0.02%", beta: 0.98, sharpe: 0.2, insight: "Top-tier Equity benchmark with a 76% AI confidence score." },
+    { name: "HSBC Credit Risk Fund-Reg(G)", cat: "Debt", returns: [20.62, 13.66, 11.25], aum: "562 Cr", expense: "1.64%", beta: 0.66, sharpe: 0.2, insight: "Strong risk-adjusted performance in the credit debt space." },
+    { name: "Franklin India Income Plus Arbitrage Active FoF", cat: "FoFs", returns: [13.1, 15.6, 14.14], aum: "76 Cr", expense: "0.53%", beta: 0.94, sharpe: 0.42, insight: "Hybrid arbitrage strategy for tax-efficient low volatility returns." },
+    { name: "ICICI Pru Multi-Asset Fund(G)", cat: "Hybrid", returns: [12.92, 20.54, 19.34], aum: "68,000 Cr", expense: "1.38%", beta: 0.46, sharpe: 0.59, insight: "Perfect multi-asset diversification with massive scale stability." },
+    { name: "Parag Parikh Flexi Cap Fund", cat: "Equity", returns: [8.68, 21.08, 21.65], aum: "119,723 Cr", expense: "1.28%", beta: 0.57, sharpe: 0.49, insight: "Conservative equity approach with consistent alpha generation." }
   ],
   "Capital Preservation": [
-    { name: "Bank of India Overnight Fund", cat: "Debt", returns: [6.1, 6.45, 6.51], aum: "33 Cr", expense: "0.10%", beta: 0.98, sharpe: -0.36, insight: "Designed for absolute liquidity. Safest possible vehicle for parking emergency funds." },
-    { name: "Axis Overnight Fund (G)", cat: "Debt", returns: [6.02, 6.37, 6.43], aum: "8,742 Cr", expense: "0.11%", beta: 0.74, sharpe: -0.51, insight: "High asset quality with zero credit risk. Ideal for 1-7 day investment windows." }
+    { name: "Bank of India Overnight Fund", cat: "Debt", returns: [6.1, 6.45, 6.51], aum: "34 Cr", expense: "0.1%", beta: 0.98, sharpe: -0.36, insight: "Pure liquidity management with a perfect 100% Quality Score." },
+    { name: "Axis Overnight Fund-Reg(G)", cat: "Debt", returns: [6.02, 6.37, 6.43], aum: "8,743 Cr", expense: "0.11%", beta: 0.74, sharpe: -0.51, insight: "Large-scale institutional grade overnight liquidity fund." },
+    { name: "UTI Overnight Fund-Reg(G)", cat: "Debt", returns: [5.97, 6.33, 6.39], aum: "6,559 Cr", expense: "0.11%", beta: 1.0, sharpe: -0.59, insight: "Reliable stability and capital protection for short windows." },
+    { name: "Canara Rob Overnight Fund", cat: "Debt", returns: [5.93, 6.28, 6.35], aum: "265 Cr", expense: "0.09%", beta: 0.95, sharpe: -0.7, insight: "Optimized expense ratio for maximum preservation of capital." },
+    { name: "Invesco India Overnight Fund", cat: "Debt", returns: [5.95, 6.32, 6.38], aum: "644 Cr", expense: "0.12%", beta: 0.76, sharpe: -0.61, insight: "Consistently low volatility profile across all market conditions." },
+    { name: "Franklin India Overnight Fund", cat: "Debt", returns: [5.98, 6.30, 6.35], aum: "486 Cr", expense: "0.11%", beta: 0.71, sharpe: -0.71, insight: "Institutional stability for high-liquidity risk profiles." }
   ],
   "High-Alpha Aggressive": [
-    { name: "Mirae Asset NYSE FANG+ ETF", cat: "Global", returns: [81.73, 67.49, 71.07], aum: "2,347 Cr", expense: "0.45%", beta: 0.47, sharpe: 0.49, insight: "Exposure to US Tech Giants. Incredible 3Y CAGR of 71%, though high global risk applies." },
-    { name: "DSP World Gold Mining FoF", cat: "Gold/FoF", returns: [80.51, 61.6, 44.46], aum: "1,677 Cr", expense: "2.34%", beta: 0.25, sharpe: 0.38, insight: "Non-correlated asset. Gold mining stocks provide a hedge against inflation and equity crashes." }
+    { name: "Mirae Asset NYSE FANG+ETF FoF", cat: "FoFs", returns: [81.73, 67.49, 71.07], aum: "2,347 Cr", expense: "0.45%", beta: 0.47, sharpe: 0.49, insight: "Hyper-growth tech exposure with a massive 97% Alpha Score." },
+    { name: "Mirae Asset NYSE FANG+ ETF", cat: "Equity", returns: [49.31, 53.07, 60.85], aum: "3,492 Cr", expense: "0.65%", beta: 0.88, sharpe: 0.47, insight: "Direct tech benchmark with verified 3-year performance peaks." },
+    { name: "HDFC Silver ETF FoF-Reg(G)", cat: "Gold/Commodity", returns: [50.51, 40.55, 33.05], aum: "1,273 Cr", expense: "0.6%", beta: 0.04, sharpe: 0.35, insight: "Commodity hedge with superior price correlation and low beta." },
+    { name: "DSP World Gold Mining FoF", cat: "FoFs", returns: [80.51, 61.6, 44.46], aum: "1,678 Cr", expense: "2.34%", beta: 0.25, sharpe: 0.38, insight: "Unique global mining exposure providing high non-equity alpha." },
+    { name: "Quantum Gold Saving Fund", cat: "Gold", returns: [51.16, 38.59, 31.91], aum: "299 Cr", expense: "0.45%", beta: 0.38, sharpe: 0.49, insight: "Efficient commodity asset with a strong 79% quality rating." },
+    { name: "Mirae Asset S&P 500 Top 50 FoF", cat: "FoFs", returns: [55.57, 48.07, 40.6], aum: "752 Cr", expense: "0.49%", beta: 0.3, sharpe: 0.4, insight: "Diversified US-large cap exposure for global portfolio alpha." }
   ]
 };
 
-// UI Interaction
-const sliders = ["age", "risk", "horizon", "liq", "ret"];
-sliders.forEach(s => {
+// UI Handling
+const sliderConf = ["age", "risk", "horizon", "liq", "ret"];
+sliderConf.forEach(s => {
   document.getElementById(s).addEventListener('input', (e) => {
     let val = e.target.value;
-    let label = val;
-    if(s === 'horizon') label += 'Y';
-    if(s === 'ret') label += '%';
-    if(s === 'risk' || s === 'liq') label += '/10';
-    document.getElementById(`d-${s}`).innerText = label;
+    let lbl = val;
+    if(s === 'horizon') lbl += 'Y';
+    if(s === 'ret') lbl += '%';
+    if(['risk', 'liq'].includes(s)) lbl += '/10';
+    document.getElementById(`d-${s}`).innerText = lbl;
   });
 });
 
@@ -36,7 +46,7 @@ function generateStrategy() {
   
   let cluster = "Growth & Stability";
   if (risk <= 4) cluster = "Capital Preservation";
-  else if (risk >= 8 || ret > 22) cluster = "High-Alpha Aggressive";
+  else if (risk >= 8 || ret > 20) cluster = "High-Alpha Aggressive";
 
   document.getElementById('hero-view').style.display = 'none';
   document.getElementById('results-view').classList.remove('hidden');
@@ -53,21 +63,15 @@ function renderProjection(funds) {
   const ctx = document.getElementById('mainChart').getContext('2d');
   
   let values = [100000];
-  let labels = ["Start"];
-  const yoyContainer = document.getElementById('yoy-list');
-  yoyContainer.innerHTML = '';
+  let labels = ["Base"];
+  const listEl = document.getElementById('yoy-list');
+  listEl.innerHTML = '';
 
   for(let i=1; i<=5; i++) {
-    const val = values[i-1] * (1 + avg3y/100);
-    values.push(val);
+    const nextVal = values[i-1] * (1 + avg3y/100);
+    values.push(nextVal);
     labels.push(`Year ${i}`);
-    
-    yoyContainer.innerHTML += `
-      <div class="yoy-item">
-        <span>Year ${i}</span>
-        <b>₹${Math.round(val).toLocaleString()}</b>
-      </div>
-    `;
+    listEl.innerHTML += `<div class="yoy-item"><span>Year ${i}</span><b>₹${Math.round(nextVal).toLocaleString()}</b></div>`;
   }
 
   if(mainChart) mainChart.destroy();
@@ -76,19 +80,19 @@ function renderProjection(funds) {
     data: {
       labels: labels,
       datasets: [{
-        label: 'Growth',
+        label: 'Value',
         data: values,
-        borderColor: '#6366f1',
-        borderWidth: 4,
-        tension: 0.4,
+        borderColor: '#0284c7',
+        borderWidth: 3,
+        tension: 0.35,
         fill: true,
-        backgroundColor: 'rgba(99, 102, 241, 0.1)'
+        backgroundColor: 'rgba(2, 132, 199, 0.05)'
       }]
     },
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: { legend: {display: false} },
-      scales: { x: {grid:{display:false}}, y: {ticks:{callback:v=>'₹'+v/1000+'k'}}}
+      scales: { x: {grid:{display:false}}, y: {ticks:{callback:v => '₹' + v/1000 + 'k'}}}
     }
   });
 }
@@ -98,7 +102,7 @@ function renderFunds(funds) {
   grid.innerHTML = '';
 
   funds.forEach((f, i) => {
-    const id = `f-chart-${i}`;
+    const canvasId = `mini-${i}`;
     grid.innerHTML += `
       <div class="fund-card">
         <div class="f-head">
@@ -106,39 +110,38 @@ function renderFunds(funds) {
           <div class="f-name">${f.name}</div>
         </div>
         <div class="f-analytics">
-          <div class="mini-chart-wrap"><canvas id="${id}"></canvas></div>
+          <div class="mini-chart-wrap"><canvas id="${canvasId}"></canvas></div>
           <div class="f-metrics">
             <div class="m-item"><label>AUM</label><div>${f.aum}</div></div>
-            <div class="m-item"><label>Expense</label><div>${f.expense}</div></div>
+            <div class="m-item"><label>Exp. Ratio</label><div>${f.expense}</div></div>
             <div class="m-item"><label>Beta</label><div>${f.beta}</div></div>
             <div class="m-item"><label>Sharpe</label><div>${f.sharpe}</div></div>
           </div>
         </div>
         <div class="f-insight">
-          <b>Fund Insight</b>
           ${f.insight}
         </div>
       </div>
     `;
     
     setTimeout(() => {
-      const ctx = document.getElementById(id).getContext('2d');
-      new Chart(ctx, {
+      const mCtx = document.getElementById(canvasId).getContext('2d');
+      new Chart(mCtx, {
         type: 'bar',
         data: {
           labels: ['1Y', '2Y', '3Y'],
           datasets: [{
             data: f.returns,
-            backgroundColor: ['#c7d2fe', '#818cf8', '#6366f1'],
-            borderRadius: 8
+            backgroundColor: ['#bae6fd', '#38bdf8', '#0284c7'],
+            borderRadius: 6
           }]
         },
         options: {
           responsive: true, maintainAspectRatio: false,
-          plugins: { legend: {display: false}, title: {display: true, text: 'Returns History %', font: {size: 12}}},
-          scales: { y: {display: false}, x: {grid:{display:false}} }
+          plugins: { legend: {display: false} },
+          scales: { y: {display: false}, x: {grid:{display:false}, ticks:{font:{size:9}}} }
         }
       });
-    }, 100);
+    }, 50);
   });
 }
