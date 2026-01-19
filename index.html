@@ -7,9 +7,34 @@
 </head>
 <body>
 
-  <button onclick="callRecommendationAPI()">
-    Test Recommendation API
+<div class="container">
+  <h2>Tell us about yourself</h2>
+
+  <label>Age</label>
+  <input type="number" id="age" value="30">
+
+  <label>Risk Appetite (1–10)</label>
+  <input type="number" id="risk_score" value="7">
+
+  <label>Investment Horizon (years)</label>
+  <input type="number" id="investment_horizon" value="8">
+
+  <label>Liquidity Need (1–10)</label>
+  <input type="number" id="liquidity_need" value="3">
+
+  <label>Expected Return (%)</label>
+  <input type="number" id="expected_return" value="15">
+
+  <label>Income Stability (1–5)</label>
+  <input type="number" id="income_stability" value="4">
+
+  <br><br>
+
+  <button onclick="submitForm()">
+    Get Recommendation
   </button>
+</div>
+
 
   <!-- 🔴 THIS LINE IS THE FIX -->
   <script src="script.js"></script>
