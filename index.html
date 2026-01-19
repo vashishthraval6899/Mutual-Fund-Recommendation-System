@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FundMate Pro | Intelligent Wealth Platform</title>
+  <title>QuantEdge AI | Advanced Fund Analytics</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/feather-icons"></script>
@@ -14,8 +14,8 @@
 <div class="app-shell">
   <aside class="sidebar">
     <div class="brand">
-      <div class="brand-logo"><i data-feather="zap"></i></div>
-      <div class="brand-text">Fund<span>Mate</span></div>
+      <div class="brand-logo"><i data-feather="terminal"></i></div>
+      <div class="brand-text">Quant<span>Edge</span> AI</div>
     </div>
 
     <div class="control-panel">
@@ -25,12 +25,12 @@
       </div>
 
       <div class="group">
-        <div class="header"><span>Risk Appetite</span> <b id="d-risk">7/10</b></div>
+        <div class="header"><span>Risk Tolerance</span> <b id="d-risk">7/10</b></div>
         <input type="range" id="risk" min="1" max="10" value="7" class="slider risk-accent">
       </div>
 
       <div class="group">
-        <div class="header"><span>Investment Horizon</span> <b id="d-horizon">5Y</b></div>
+        <div class="header"><span>Time Horizon</span> <b id="d-horizon">5Y</b></div>
         <input type="range" id="horizon" min="1" max="5" value="5" class="slider">
       </div>
 
@@ -40,12 +40,12 @@
       </div>
 
       <div class="group">
-        <div class="header"><span>Expected Return</span> <b id="d-ret">15%</b></div>
+        <div class="header"><span>Yield Target</span> <b id="d-ret">15%</b></div>
         <input type="range" id="ret" min="4" max="40" value="15" class="slider">
       </div>
 
       <button class="primary-btn" onclick="generateStrategy()">
-        Generate Wealth Plan <i data-feather="arrow-right"></i>
+        Analyze Top-Tier Funds <i data-feather="cpu"></i>
       </button>
     </div>
   </aside>
@@ -53,43 +53,41 @@
   <main class="content">
     <div id="hero-view" class="hero">
       <div class="hero-inner">
-        <i data-feather="layers" class="hero-icon"></i>
-        <h2>Ready to build your portfolio?</h2>
-        <p>Adjust your preferences and click "Generate" to see deep insights.</p>
+        <i data-feather="activity" class="hero-icon"></i>
+        <h2>Engineered for Alpha</h2>
+        <p>Quantitative selection of top-performing mutual funds based on 50+ risk metrics.</p>
       </div>
     </div>
 
     <div id="results-view" class="dashboard hidden">
       <header class="dash-header">
         <div>
-          <span class="badge">AI Selection</span>
+          <span class="badge">Optimized Cluster</span>
           <h2 id="strategy-name">Growth & Stability</h2>
         </div>
         <div class="match-score">
-          <div class="score-circle" id="match-pct">92%</div>
-          <span>Strategy Match</span>
+          <div class="score-circle" id="match-pct">94%</div>
+          <span>Selection Confidence</span>
         </div>
       </header>
 
       <section class="projection-section">
         <div class="chart-box">
-          <h3>5-Year Growth Trajectory</h3>
+          <h3>Simulated Value Trajectory</h3>
           <div class="canvas-wrap"><canvas id="mainChart"></canvas></div>
         </div>
         <div class="values-box">
-          <h3>Projected Value</h3>
-          <div id="yoy-list" class="yoy-list">
-            </div>
+          <h3>Annual Projections</h3>
+          <div id="yoy-list" class="yoy-list"></div>
         </div>
       </section>
 
       <section class="funds-section">
         <div class="section-title">
-          <h3>Deep-Dive Recommended Funds</h3>
-          <p>Based on risk-adjusted returns and fund strength metrics.</p>
+          <h3>Top 6 Recommended Fund Assets</h3>
+          <p>Ranked by multi-factor efficiency scores (Sharpe, Sortino, and Beta).</p>
         </div>
-        <div class="fund-grid" id="fund-grid">
-          </div>
+        <div class="fund-grid" id="fund-grid"></div>
       </section>
     </div>
   </main>
