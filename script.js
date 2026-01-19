@@ -1,199 +1,131 @@
-// --- 1. DATA: Extracted from your CSV ---
-// Using 1yr, 2yr, 3yr returns for the mini-charts
-const FUND_DB = {
-  "Balanced Growth": [
-    { name: "ICICI Pru Pharma Healthcare", cat: "Equity", r1: 5.36, r2: 29.94, r3: 26.65, sharpe: 0.43, risk: "High" },
-    { name: "Kotak Nifty Midcap 50", cat: "Equity", r1: 10.29, r2: 23.20, r3: 25.36, sharpe: 0.36, risk: "High" },
-    { name: "SBI Healthcare Opp Fund", cat: "Equity", r1: 2.66, r2: 26.68, r3: 24.09, sharpe: 0.41, risk: "Med-High" },
-    { name: "HDFC Flexi Cap Fund", cat: "Equity", r1: 10.33, r2: 24.96, r3: 21.89, sharpe: 0.43, risk: "Medium" },
-    { name: "Parag Parikh Flexi Cap", cat: "Equity", r1: 8.68, r2: 21.08, r3: 21.65, sharpe: 0.49, risk: "Medium" }
-  ],
-  "Capital Preservation": [
-    { name: "Bank of India Overnight", cat: "Debt", r1: 6.10, r2: 6.45, r3: 6.51, sharpe: -0.36, risk: "Low" },
-    { name: "Axis Overnight Fund", cat: "Debt", r1: 6.02, r2: 6.37, r3: 6.43, sharpe: -0.51, risk: "Very Low" },
-    { name: "UTI Overnight Fund", cat: "Debt", r1: 5.97, r2: 6.33, r3: 6.39, sharpe: -0.59, risk: "Low" },
-    { name: "Invesco India Overnight", cat: "Debt", r1: 5.95, r2: 6.32, r3: 6.38, sharpe: -0.61, risk: "Very Low" },
-    { name: "Nippon India Overnight", cat: "Debt", r1: 5.97, r2: 6.31, r3: 6.37, sharpe: -0.63, risk: "Low" }
-  ],
-  "Aggressive Tactical": [
-    { name: "Mirae Asset NYSE FANG+", cat: "Global", r1: 81.73, r2: 67.49, r3: 71.07, sharpe: 0.49, risk: "Very High" },
-    { name: "Mirae Asset NYSE FANG+ ETF", cat: "Equity", r1: 49.31, r2: 53.07, r3: 60.85, sharpe: 0.47, risk: "Very High" },
-    { name: "DSP World Gold Mining", cat: "FoF", r1: 80.51, r2: 61.60, r3: 44.46, sharpe: 0.38, risk: "High" },
-    { name: "Mirae Asset S&P 500 Top 50", cat: "FoF", r1: 55.57, r2: 48.07, r3: 40.60, sharpe: 0.40, risk: "High" },
-    { name: "HDFC Silver ETF", cat: "Gold", r1: 50.51, r2: 40.55, r3: 33.05, sharpe: 0.35, risk: "High" }
-  ]
+// Data from CSV
+const FUND_DATA = {
+    "Balanced Growth": [
+        { name: "ICICI Pru Pharma Healthcare", cat: "Equity", r1: 5.36, r2: 29.94, r3: 26.65, beta: 0.76, sharpe: 0.43 },
+        { name: "Kotak Nifty Midcap 50 ETF", cat: "Equity", r1: 10.29, r2: 23.2, r3: 25.36, beta: 1.0, sharpe: 0.36 },
+        { name: "SBI Healthcare Opp Fund", cat: "Equity", r1: 2.66, r2: 26.68, r3: 24.09, beta: 0.87, sharpe: 0.41 },
+        { name: "HDFC Flexi Cap Fund", cat: "Equity", r1: 10.33, r2: 24.96, r3: 21.89, beta: 0.82, sharpe: 0.43 },
+        { name: "Parag Parikh Flexi Cap", cat: "Equity", r1: 8.68, r2: 21.08, r3: 21.65, beta: 0.57, sharpe: 0.49 }
+    ],
+    "Capital Preservation": [
+        { name: "Bank of India Overnight Fund", cat: "Debt", r1: 6.1, r2: 6.45, r3: 6.51, beta: 0.98, sharpe: -0.36 },
+        { name: "Axis Overnight Fund", cat: "Debt", r1: 6.02, r2: 6.37, r3: 6.43, beta: 0.74, sharpe: -0.51 },
+        { name: "UTI Overnight Fund", cat: "Debt", r1: 5.97, r2: 6.33, r3: 6.39, beta: 1.0, sharpe: -0.59 },
+        { name: "Invesco India Overnight Fund", cat: "Debt", r1: 5.95, r2: 6.32, r3: 6.38, beta: 0.76, sharpe: -0.61 },
+        { name: "Nippon India Overnight Fund", cat: "Debt", r1: 5.97, r2: 6.31, r3: 6.37, beta: 1.0, sharpe: -0.63 }
+    ],
+    "Aggressive Tactical": [
+        { name: "Mirae Asset NYSE FANG+ ETF", cat: "Global", r1: 81.73, r2: 67.49, r3: 71.07, beta: 0.47, sharpe: 0.49 },
+        { name: "Mirae Asset NYSE FANG+ ETF (Direct)", cat: "Equity", r1: 49.31, r2: 53.07, r3: 60.85, beta: 0.88, sharpe: 0.47 },
+        { name: "DSP World Gold Mining FoF", cat: "Gold/FoF", r1: 80.51, r2: 61.6, r3: 44.46, beta: 0.25, sharpe: 0.38 },
+        { name: "Mirae Asset S&P 500 Top 50", cat: "Global", r1: 55.57, r2: 48.07, r3: 40.6, beta: 0.3, sharpe: 0.4 },
+        { name: "HDFC Silver ETF FoF", cat: "Commodity", r1: 50.51, r2: 40.55, r3: 33.05, beta: 0.04, sharpe: 0.35 }
+    ]
 };
 
-// --- 2. INPUT LISTENERS (Fixed) ---
-const inputs = ['age', 'risk_score', 'investment_horizon', 'liquidity_need', 'expected_return'];
-inputs.forEach(id => {
-  document.getElementById(id).addEventListener('input', (e) => {
-    let val = e.target.value;
-    if(id === 'risk_score' || id === 'liquidity_need') val += '/10';
-    if(id === 'investment_horizon') val += ' Years';
-    if(id === 'expected_return') val += '%';
-    document.getElementById('disp_' + id.split('_')[0].replace('investment','horizon').replace('risk','risk').replace('liquidity','liq')).innerText = val;
-  });
+// Fixed Slider Listeners
+const sliderIds = ["age", "risk_score", "investment_horizon", "liquidity_need", "expected_return"];
+sliderIds.forEach(id => {
+    document.getElementById(id).addEventListener("input", (e) => {
+        let val = e.target.value;
+        const dispId = "disp_" + id.replace("_score", "").replace("investment_", "").replace("liquidity_need", "liq").replace("expected_return", "return");
+        let suffix = "";
+        if (id.includes("risk") || id.includes("liquidity")) suffix = "/10";
+        if (id.includes("horizon")) suffix = " Years";
+        if (id.includes("return")) suffix = "%";
+        document.getElementById(dispId).innerText = val + suffix;
+    });
 });
 
 let mainChart = null;
 
-// --- 3. MAIN RECOMMENDATION LOGIC ---
 async function getRecommendation() {
-  const btn = document.querySelector('.action-btn');
-  btn.innerHTML = `<i data-feather="loader" class="spin"></i> Analyzing Profile...`;
-  feather.replace();
+    const risk = parseInt(document.getElementById("risk_score").value);
+    const horizon = parseInt(document.getElementById("investment_horizon").value);
 
-  // Retrieve values
-  const risk = Number(document.getElementById("risk_score").value);
-  const horizon = Number(document.getElementById("investment_horizon").value);
-  const exp_ret = Number(document.getElementById("expected_return").value);
-
-  // Mock Latency
-  setTimeout(() => {
-    // Simple Rule-based clustering for Demo
+    // AI logic
     let cluster = "Balanced Growth";
-    if (risk <= 4 || horizon < 3) cluster = "Capital Preservation";
-    if (risk >= 8 || exp_ret > 20) cluster = "Aggressive Tactical";
+    if (risk <= 4 || horizon <= 2) cluster = "Capital Preservation";
+    else if (risk >= 8) cluster = "Aggressive Tactical";
 
-    // Show Dashboard
-    document.getElementById("welcome-view").style.display = 'none';
+    document.getElementById("welcome-view").style.display = "none";
     document.getElementById("dashboard-view").classList.remove("hidden");
     document.getElementById("cluster-title").innerText = cluster;
-    
-    // --- A. RENDER FUNDS & MINI CHARTS ---
-    const container = document.getElementById("funds-container");
-    container.innerHTML = '';
-    const funds = FUND_DB[cluster];
-    
-    funds.forEach((f, idx) => {
-      // Unique ID for canvas
-      const canvasId = `chart_${idx}`;
-      
-      container.innerHTML += `
-        <div class="fund-card">
-          <div class="fund-header">
-            <span class="f-cat">${f.cat}</span>
-            <div class="f-name">${f.name}</div>
-          </div>
-          <div class="f-stats">
-            <div class="stat-box">
-              <span class="stat-lbl">3Y Return</span>
-              <span class="stat-val" style="color: #10b981">+${f.r3}%</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-lbl">Risk</span>
-              <span class="stat-val">${f.risk}</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-lbl">Sharpe</span>
-              <span class="stat-val">${f.sharpe}</span>
-            </div>
-          </div>
-          <div class="mini-chart-container">
-            <canvas id="${canvasId}"></canvas>
-          </div>
-        </div>
-      `;
-    });
 
-    // Draw Mini Charts (Sparklines)
-    funds.forEach((f, idx) => {
-      const ctx = document.getElementById(`chart_${idx}`).getContext('2d');
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ['1Y', '2Y', '3Y'],
-          datasets: [{
-            data: [f.r1, f.r2, f.r3],
-            borderColor: '#2563eb',
-            borderWidth: 2,
-            tension: 0.4,
-            pointRadius: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: {display: false}, tooltip: {enabled: false} },
-          scales: { x: {display: false}, y: {display: false} }
-        }
-      });
-    });
-
-    // --- B. RENDER MAIN WEALTH PROJECTION ---
-    renderWealthChart(funds, horizon);
-
-    btn.innerHTML = `<span>Find Best Funds</span><i data-feather="arrow-right"></i>`;
+    const funds = FUND_DATA[cluster];
+    renderMainChart(funds);
+    renderFundGrid(funds);
     feather.replace();
-  }, 800);
 }
 
-// --- 4. WEALTH PROJECTION & TIMELINE ---
-function renderWealthChart(funds, years) {
-  const ctx = document.getElementById('growthChart').getContext('2d');
-  const avgReturn = funds.reduce((acc, f) => acc + f.r3, 0) / funds.length;
-  
-  // Generate Data Points
-  const labels = [];
-  const data = [];
-  let current = 100000; // 1 Lakh start
-  
-  const timeline = document.getElementById('growth-timeline');
-  timeline.innerHTML = ''; // Clear old
-
-  // Initial
-  labels.push('Start');
-  data.push(current);
-  timeline.innerHTML += `
-    <div class="year-row">
-      <span>Initial Investment</span>
-      <span class="year-val">₹ 1,00,000</span>
-    </div>`;
-
-  for(let i=1; i<=years; i++) {
-    labels.push(`Year ${i}`);
-    current = current * (1 + (avgReturn/100));
-    data.push(current);
+function renderMainChart(funds) {
+    const ctx = document.getElementById("growthChart").getContext("2d");
+    const avg3y = funds.reduce((a, b) => a + b.r3, 0) / funds.length;
     
-    // Add to Timeline List
-    timeline.innerHTML += `
-      <div class="year-row">
-        <span>Year ${i}</span>
-        <span class="year-val">₹ ${Math.round(current).toLocaleString()}</span>
-      </div>`;
-  }
+    // Strictly 5 years
+    let labels = ["Year 0", "Year 1", "Year 2", "Year 3", "Year 4", "Year 5"];
+    let values = [100000];
+    for(let i=1; i<=5; i++) values.push(values[i-1] * (1 + avg3y/100));
 
-  // Draw Chart
-  if(mainChart) mainChart.destroy();
-  
-  mainChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Projected Value',
-        data: data,
-        backgroundColor: (context) => {
-          const ctx = context.chart.ctx;
-          const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-          gradient.addColorStop(0, 'rgba(37, 99, 235, 0.2)');
-          gradient.addColorStop(1, 'rgba(37, 99, 235, 0)');
-          return gradient;
+    if(mainChart) mainChart.destroy();
+    mainChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Wealth Growth (₹)',
+                data: values,
+                borderColor: '#4f46e5',
+                fill: true,
+                backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                tension: 0.4
+            }]
         },
-        borderColor: '#2563eb',
-        fill: true,
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: {display: false} },
-      scales: {
-        x: { grid: {display: false} },
-        y: { display: false }
-      }
-    }
-  });
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+}
+
+function renderFundGrid(funds) {
+    const grid = document.getElementById("funds-grid");
+    grid.innerHTML = "";
+
+    funds.forEach((f, i) => {
+        const card = document.createElement("div");
+        card.className = "fund-card";
+        card.innerHTML = `
+            <div class="fund-info">
+                <span>${f.cat}</span>
+                <h4>${f.name}</h4>
+            </div>
+            <div class="analytics-box">
+                <div class="chart-mini"><canvas id="fChart${i}"></canvas></div>
+                <div class="risk-metrics">
+                    <div class="metric-row"><span>Beta (Volatility)</span> <b>${f.beta}</b></div>
+                    <div class="metric-row"><span>Sharpe (Efficiency)</span> <b>${f.sharpe}</b></div>
+                    <div class="metric-row"><span>3Y Return</span> <b style="color:#10b981">${f.r3}%</b></div>
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
+
+        // Render mini performance bar chart
+        const ctx = document.getElementById(`fChart${i}`).getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['1Y', '2Y', '3Y'],
+                datasets: [{
+                    label: 'Return %',
+                    data: [f.r1, f.r2, f.r3],
+                    backgroundColor: ['#c7d2fe', '#818cf8', '#4f46e5'],
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false }, title: { display: true, text: 'Returns Comparison', font: {size: 10} } },
+                scales: { y: { display: false }, x: { grid: { display: false } } }
+            }
+        });
+    });
 }
