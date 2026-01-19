@@ -1,41 +1,3 @@
-async function callRecommendationAPI() {
-  const apiUrl = "https://mf-recommender-backend-production.up.railway.app/predict";
-
-  const payload = {
-    age: 30,
-    risk_score: 7,
-    investment_horizon: 8,
-    liquidity_need: 3,
-    expected_return: 15,
-    income_stability: 4
-  };
-
-  try {
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await response.json();
-    document.getElementById("result-card").classList.remove("hidden");
-
-    document.getElementById("cluster-name").innerText =
-      "Recommended Cluster: " + data.recommended_cluster;
-    
-    document.getElementById("confidence-text").innerText =
-      "Confidence: " + (data.confidence * 100).toFixed(2) + "%";
-    
-    document.getElementById("confidence-bar").style.width =
-      (data.confidence * 100).toFixed(0) + "%";
-
-  } catch (error) {
-    console.error("API ERROR:", error);
-  }
-}
-
 async function submitForm() {
   const payload = {
     age: Number(document.getElementById("age").value),
@@ -46,20 +8,39 @@ async function submitForm() {
     income_stability: Number(document.getElementById("income_stability").value)
   };
 
-  console.log("Submitting payload:", payload);
-
   try {
     const response = await fetch(
       "https://mf-recommender-backend-production.up.railway.app/predict",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify(payload)
       }
     );
 
+    if (!response.ok) {
+      throw new Error("API returned error");
+    }
 
-  } catch (err) {
-    console.error("Prediction failed:", err);
+    const data = await response.json();
+
+    // ✅ SHOW RESULT CARD
+    document.getElementById("result-card").classList.remove("hidden");
+
+    // ✅ UPDATE CONTENT
+    document.getElementById("cluster-name").innerText =
+      "Recommended Cluster: " + data.recommended_cluster;
+
+    document.getElementById("confidence-text").innerText =
+      "Confidence: " + (data.confidence * 100).toFixed(2) + "%";
+
+    document.getElementById("confidence-bar").style.width =
+      Math.round(data.confidence * 100) + "%";
+
+  } catch (error) {
+    console.error("Prediction failed:", error);
+    alert("Something went wrong. Check console.");
   }
 }
