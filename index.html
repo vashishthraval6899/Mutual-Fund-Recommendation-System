@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mutual Fund Recommender</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>FundMate - Intelligent Investing</title>
   <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/feather-icons"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -54,10 +54,6 @@
           <span class="val-badge" id="disp_liq">3/10</span>
         </div>
         <input type="range" id="liquidity_need" min="1" max="10" value="3" class="slider">
-        <div class="slider-labels">
-          <span>Locked-in</span>
-          <span>Instant</span>
-        </div>
       </div>
 
       <div class="control-group">
@@ -69,7 +65,7 @@
       </div>
 
       <button class="action-btn" onclick="getRecommendation()">
-        <span>Find My Funds</span>
+        <span>Find Best Funds</span>
         <i data-feather="arrow-right"></i>
       </button>
     </div>
@@ -81,39 +77,33 @@
       <div class="illustration">
         <i data-feather="bar-chart-2"></i>
       </div>
-      <h2>Discover your perfect portfolio</h2>
-      <p>Adjust the sliders on the left to match your profile.</p>
+      <h2>Invest smarter, not harder.</h2>
+      <p>Set your preferences on the left to generate a personalized wealth plan.</p>
     </div>
 
     <div id="dashboard-view" class="dashboard hidden">
       
       <div class="dash-header">
-        <div>
-          <p class="sub-label">Based on your profile</p>
-          <h2 id="cluster-title">Aggressive Growth Strategy</h2>
+        <div class="header-content">
+          <span class="tag">AI Recommended Strategy</span>
+          <h2 id="cluster-title">Aggressive Growth</h2>
         </div>
-        <div class="confidence-badge">
-          <i data-feather="check-circle"></i>
-          <span id="confidence-score">92% Match</span>
+        <div class="match-badge">
+          <i data-feather="check-circle"></i> <span id="confidence-score">94% Match</span>
         </div>
       </div>
 
-      <div class="grid-layout">
-        
-        <div class="card">
+      <div class="analytics-section">
+        <div class="card chart-card">
           <div class="card-head">
-            <h3><i data-feather="zap"></i> Why this strategy?</h3>
+            <h3><i data-feather="trending-up"></i> Wealth Projection (₹1 Lakh)</h3>
           </div>
-          <div class="drivers-list" id="drivers-container">
+          <div class="projection-grid">
+            <div class="chart-wrapper">
+              <canvas id="growthChart"></canvas>
             </div>
-        </div>
-
-        <div class="card">
-          <div class="card-head">
-            <h3><i data-feather="trending-up"></i> Projected Growth (₹1L)</h3>
-          </div>
-          <div class="chart-container">
-            <canvas id="growthChart"></canvas>
+            <div class="growth-list" id="growth-timeline">
+              </div>
           </div>
         </div>
       </div>
