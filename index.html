@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>FundMate - Intelligent Investing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FundMate | AI Mutual Fund Platform</title>
   <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/feather-icons"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -15,105 +15,63 @@
   
   <aside class="sidebar">
     <div class="logo-area">
-      <div class="logo-icon"><i data-feather="hexagon"></i></div>
+      <div class="logo-icon"><i data-feather="pie-chart"></i></div>
       <h1>Fund<span class="highlight">Mate</span></h1>
     </div>
     
     <div class="controls">
       <div class="control-group">
-        <div class="label-row">
-          <label>Age</label>
-          <span class="val-badge" id="disp_age">30</span>
-        </div>
+        <div class="label-row"><label>Age</label><span class="val-badge" id="disp_age">30</span></div>
         <input type="range" id="age" min="18" max="75" value="30" class="slider">
       </div>
 
       <div class="control-group">
-        <div class="label-row">
-          <label>Risk Appetite</label>
-          <span class="val-badge" id="disp_risk">7/10</span>
-        </div>
+        <div class="label-row"><label>Risk Appetite</label><span class="val-badge" id="disp_risk">7/10</span></div>
         <input type="range" id="risk_score" min="1" max="10" value="7" class="slider risk-slider">
-        <div class="slider-labels">
-          <span>Safe</span>
-          <span>Aggressive</span>
-        </div>
       </div>
 
       <div class="control-group">
-        <div class="label-row">
-          <label>Time Horizon</label>
-          <span class="val-badge" id="disp_horizon">5 Years</span>
-        </div>
-        <input type="range" id="investment_horizon" min="1" max="20" value="5" class="slider">
-      </div>
+        <div class="label-row"><label>Time Horizon</label><span class="val-badge" id="disp_horizon">5 Years</span></div>
+        <input type="range" id="investment_horizon" min="1" max="5" value="5" class="slider"> </div>
 
       <div class="control-group">
-        <div class="label-row">
-          <label>Liquidity Need</label>
-          <span class="val-badge" id="disp_liq">3/10</span>
-        </div>
+        <div class="label-row"><label>Liquidity Need</label><span class="val-badge" id="disp_liq">3/10</span></div>
         <input type="range" id="liquidity_need" min="1" max="10" value="3" class="slider">
       </div>
 
       <div class="control-group">
-        <div class="label-row">
-          <label>Expected Return</label>
-          <span class="val-badge" id="disp_return">12%</span>
-        </div>
-        <input type="range" id="expected_return" min="4" max="30" value="12" class="slider">
+        <div class="label-row"><label>Expected Return</label><span class="val-badge" id="disp_return">12%</span></div>
+        <input type="range" id="expected_return" min="4" max="40" value="12" class="slider">
       </div>
 
       <button class="action-btn" onclick="getRecommendation()">
-        <span>Find Best Funds</span>
-        <i data-feather="arrow-right"></i>
+        <span>Analyze & Recommend</span>
+        <i data-feather="trending-up"></i>
       </button>
     </div>
   </aside>
 
   <main class="main-view">
-    
     <div id="welcome-view" class="center-msg">
-      <div class="illustration">
-        <i data-feather="bar-chart-2"></i>
-      </div>
-      <h2>Invest smarter, not harder.</h2>
-      <p>Set your preferences on the left to generate a personalized wealth plan.</p>
+      <h2>Select your preferences to see AI Insights</h2>
+      <p>We analyze 1,000+ data points to find your perfect match.</p>
     </div>
 
     <div id="dashboard-view" class="dashboard hidden">
-      
       <div class="dash-header">
-        <div class="header-content">
-          <span class="tag">AI Recommended Strategy</span>
-          <h2 id="cluster-title">Aggressive Growth</h2>
-        </div>
-        <div class="match-badge">
-          <i data-feather="check-circle"></i> <span id="confidence-score">94% Match</span>
-        </div>
+        <h2 id="cluster-title">Strategy Name</h2>
+        <div class="match-badge"><i data-feather="shield"></i> <span id="confidence-score">Verified Match</span></div>
       </div>
 
-      <div class="analytics-section">
-        <div class="card chart-card">
-          <div class="card-head">
-            <h3><i data-feather="trending-up"></i> Wealth Projection (₹1 Lakh)</h3>
-          </div>
-          <div class="projection-grid">
-            <div class="chart-wrapper">
-              <canvas id="growthChart"></canvas>
-            </div>
-            <div class="growth-list" id="growth-timeline">
-              </div>
-          </div>
+      <div class="card main-chart-card">
+        <h3>5-Year Wealth Projection (₹1,00,000 Investment)</h3>
+        <div class="projection-container">
+          <canvas id="growthChart"></canvas>
         </div>
       </div>
 
-      <div class="funds-section">
-        <h3><i data-feather="award"></i> Top 5 Recommended Funds</h3>
-        <div class="funds-grid" id="funds-container">
-          </div>
-      </div>
-
+      <div class="funds-container" id="funds-grid">
+        </div>
     </div>
   </main>
 </div>
