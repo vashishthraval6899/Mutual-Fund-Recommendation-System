@@ -35,4 +35,29 @@
   </button>
 
   <!-- ✅ RESULT CARD -->
-  <div id="
+  <div id="result-card" class="card hidden" style="margin-top:30px;">
+    <div class="card-header">
+      <h2>Recommendation Result</h2>
+    </div>
+
+    <div class="card-body" style="padding:20px;">
+      <p id="cluster-name" style="font-size:20px; font-weight:700;"></p>
+      <p id="confidence-text"></p>
+
+      <div style="margin-top:15px;">
+        <div style="height:10px; background:#e5e7eb; border-radius:6px;">
+          <div id="confidence-bar"
+               style="height:10px; width:0%; background:#2563eb; border-radius:6px;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ✅ SCRIPT MUST BE LAST -->
+<script src="script.js"></script>
+
+</body>
+</html>
