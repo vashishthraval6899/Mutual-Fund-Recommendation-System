@@ -20,7 +20,16 @@ async function callRecommendationAPI() {
     });
 
     const data = await response.json();
-    console.log("API RESPONSE:", data);
+    document.getElementById("result-card").classList.remove("hidden");
+
+    document.getElementById("cluster-name").innerText =
+      "Recommended Cluster: " + data.recommended_cluster;
+    
+    document.getElementById("confidence-text").innerText =
+      "Confidence: " + (data.confidence * 100).toFixed(2) + "%";
+    
+    document.getElementById("confidence-bar").style.width =
+      (data.confidence * 100).toFixed(0) + "%";
 
   } catch (error) {
     console.error("API ERROR:", error);
