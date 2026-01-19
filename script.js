@@ -8,39 +8,53 @@ async function submitForm() {
     income_stability: Number(document.getElementById("income_stability").value)
   };
 
-  try {
-    const response = await fetch(
-      "https://mf-recommender-backend-production.up.railway.app/predict",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("API returned error");
+  const response = await fetch(
+    "https://mf-recommender-backend-production.up.railway.app/predict",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     }
+  );
 
-    const data = await response.json();
+  const data = await response.json();
 
-    // ✅ SHOW RESULT CARD
-    document.getElementById("result-card").classList.remove("hidden");
+  // Show dashboard
+  document.getElementById("dashboard").classList.remove("hidden");
 
-    // ✅ UPDATE CONTENT
-    document.getElementById("cluster-name").innerText =
-      "Recommended Cluster: " + data.recommended_cluster;
+  // Cluster info
+  document.getElementById("cluster-name").innerText =
+    data.recommended_cluster;
 
-    document.getElementById("confidence-text").innerText =
-      "Confidence: " + (data.confidence * 100).toFixed(2) + "%";
+  document.getElementById("confidence-text").innerText =
+    `Confidence: ${(data.confidence * 100).toFixed(2)}%`;
 
-    document.getElementById("confidence-bar").style.width =
-      Math.round(data.confidence * 100) + "%";
+  document.getElementById("confidence-bar").style.width =
+    `${Math.round(data.confidence * 100)}%`;
 
-  } catch (error) {
-    console.error("Prediction failed:", error);
-    alert("Something went wrong. Check console.");
-  }
+  // Probability bars
+  const clusterNames = [
+    "Balanced Growth",
+    "Capital Preservation",
+    "Aggressive Tactical"
+  ];
+
+  const probContainer = document.getElementById("probability-bars");
+  probContainer.innerHTML = "";
+
+  data.probabilities.forEach((prob, idx) => {
+    probContainer.innerHTML += `
+      <div class="prob-row">
+        <span>${clusterNames[idx]}</span>
+        <div class="prob-track">
+          <div class="prob-fill" style="width:${(prob * 100).toFixed(1)}%"></div>
+        </div>
+        <span>${(prob * 100).toFixed(1)}%</span>
+      </div>
+    `;
+  });
+
+  // SHAP Image
+  document.getElementById("shap-image").src =
+    `data:image/png;base64,${data.shap_plot_base64}`;
 }
