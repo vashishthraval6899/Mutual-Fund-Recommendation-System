@@ -2,62 +2,92 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Mutual Fund Recommender</title>
+  <title>Mutual Fund Recommendation System</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div class="container">
-  <h2>Tell us about yourself</h2>
+  <header>
+    <h1>Mutual Fund <span class="highlight">Recommender</span></h1>
+    <p>Answer a few questions and get an AI-powered recommendation</p>
+  </header>
 
-  <label>Age</label>
-  <input type="number" id="age" value="30">
-
-  <label>Risk Appetite (1–10)</label>
-  <input type="number" id="risk_score" value="7">
-
-  <label>Investment Horizon (years)</label>
-  <input type="number" id="investment_horizon" value="8">
-
-  <label>Liquidity Need (1–10)</label>
-  <input type="number" id="liquidity_need" value="3">
-
-  <label>Expected Return (%)</label>
-  <input type="number" id="expected_return" value="15">
-
-  <label>Income Stability (1–5)</label>
-  <input type="number" id="income_stability" value="4">
-
-  <br><br>
-
-  <button onclick="submitForm()">
-    Get Recommendation
-  </button>
-
-  <!-- ✅ RESULT CARD -->
-  <div id="result-card" class="card hidden" style="margin-top:30px;">
-    <div class="card-header">
-      <h2>Recommendation Result</h2>
+  <div class="control-panel">
+    <div class="input-group">
+      <label>Age</label>
+      <input type="number" id="age" value="30">
     </div>
 
-    <div class="card-body" style="padding:20px;">
-      <p id="cluster-name" style="font-size:20px; font-weight:700;"></p>
-      <p id="confidence-text"></p>
+    <div class="input-group">
+      <label>Risk Appetite (1–10)</label>
+      <input type="number" id="risk_score" value="7">
+    </div>
 
-      <div style="margin-top:15px;">
-        <div style="height:10px; background:#e5e7eb; border-radius:6px;">
-          <div id="confidence-bar"
-               style="height:10px; width:0%; background:#2563eb; border-radius:6px;">
-          </div>
+    <div class="input-group">
+      <label>Investment Horizon (Years)</label>
+      <input type="number" id="investment_horizon" value="8">
+    </div>
+
+    <div class="input-group">
+      <label>Liquidity Need (1–10)</label>
+      <input type="number" id="liquidity_need" value="3">
+    </div>
+
+    <div class="input-group">
+      <label>Expected Return (%)</label>
+      <input type="number" id="expected_return" value="15">
+    </div>
+
+    <div class="input-group">
+      <label>Income Stability (1–5)</label>
+      <input type="number" id="income_stability" value="4">
+    </div>
+
+    <button class="primary-btn" onclick="submitForm()">
+      Get Recommendation
+    </button>
+  </div>
+
+  <!-- RESULT DASHBOARD -->
+  <div id="dashboard" class="dashboard hidden">
+
+    <!-- CLUSTER CARD -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Recommended Cluster</h2>
+      </div>
+      <div class="card-body">
+        <h3 id="cluster-name"></h3>
+        <p id="confidence-text"></p>
+
+        <div class="confidence-track">
+          <div id="confidence-bar" class="confidence-bar"></div>
         </div>
       </div>
     </div>
-  </div>
 
+    <!-- PROBABILITY CARD -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Cluster Probabilities</h2>
+      </div>
+      <div class="card-body" id="probability-bars"></div>
+    </div>
+
+    <!-- SHAP CARD -->
+    <div class="card">
+      <div class="card-header">
+        <h2>Why this recommendation?</h2>
+      </div>
+      <div class="card-body">
+        <img id="shap-image" class="shap-img" />
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<!-- ✅ SCRIPT MUST BE LAST -->
-<script src="script.js"></script>
-
+<script src="./script.js"></script>
 </body>
 </html>
