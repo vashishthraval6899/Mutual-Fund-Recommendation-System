@@ -1,3 +1,26 @@
+// --- Helper: Natural Language Explanations ---
+function humanizeExplanation(f) {
+  const nameMap = {
+    risk_appetite: "Your risk appetite",
+    expected_returns: "Your expected returns",
+    liquidity_needs: "Your liquidity needs",
+    investment_duration: "Your investment duration",
+    age: "Your age"
+  };
+
+  const reasonMap = {
+    increase: "pushes your risk higher",
+    decrease: "pulls your risk lower"
+  };
+
+  // Fallback if feature/effect keys are missing
+  const featureName = nameMap[f.feature] || f.feature;
+  const effectText = reasonMap[f.effect] || "impacts your profile";
+
+  return `${featureName} ${effectText}, making it one of the key drivers in your risk profile.`;
+}
+
+// --- Data Source ---
 const FUND_DATA = {
   "Growth & Stability": [
     { name: "DSP Credit Risk Fund-Reg(G)", cat: "Debt", returns: [21.58, 14.47, 14.87], aum: "208 Cr", expense: "1.2%", beta: 0.18, sharpe: 0.29, insight: "Market-leading credit pick with a Quality Score of 78%." },
@@ -31,29 +54,33 @@ const FUND_DATA = {
   ]
 };
 
-// UI Handling
+// --- UI Interaction ---
 const sliders = ["age", "risk", "horizon", "liq", "ret"];
 sliders.forEach(s => {
-  document.getElementById(s).addEventListener('input', (e) => {
-    let val = e.target.value;
-    let lbl = val;
-    if(s === 'horizon') lbl += 'Y';
-    if(s === 'ret') lbl += '%';
-    if(['risk', 'liq'].includes(s)) lbl += '/10';
-    document.getElementById(`d-${s}`).innerText = lbl;
-  });
+  const el = document.getElementById(s);
+  if (el) {
+    el.addEventListener('input', (e) => {
+      let val = e.target.value;
+      let lbl = val;
+      if (s === 'horizon') lbl += 'Y';
+      if (s === 'ret') lbl += '%';
+      if (['risk', 'liq'].includes(s)) lbl += '/10';
+      document.getElementById(`d-${s}`).innerText = lbl;
+    });
+  }
 });
 
 let mainChart = null;
 
 function generateStrategy() {
-  const risk = parseInt(document.getElementById('risk').value);
-  const ret = parseInt(document.getElementById('ret').value);
-  
+  const risk = parseInt(document.getElementById('risk').value) || 5;
+  const ret = parseInt(document.getElementById('ret').value) || 12;
+
   let cluster = "Growth & Stability";
   if (risk <= 4) cluster = "Capital Preservation";
   else if (risk >= 8 || ret > 20) cluster = "High-Alpha Aggressive";
 
+  // Switch View
   document.getElementById('hero-view').style.display = 'none';
   document.getElementById('results-view').classList.remove('hidden');
   document.getElementById('strategy-name').innerText = cluster;
@@ -61,31 +88,55 @@ function generateStrategy() {
   const funds = FUND_DATA[cluster];
   renderProjection(funds);
   renderFunds(funds);
-  feather.replace();
   
-  // Smooth scroll to results on mobile
-  if(window.innerWidth <= 1024) {
+  if (typeof feather !== 'undefined') feather.replace();
+
+  // Scroll on Mobile
+  if (window.innerWidth <= 1024) {
     document.getElementById('results-view').scrollIntoView({ behavior: 'smooth' });
   }
+
+  // --- Call Explainability API ---
+  fetch("https://mf-recommender-backend-production.up.railway.app/explain-risk", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      age: +document.getElementById("age").value,
+      risk_appetite: +document.getElementById("risk").value,
+      investment_duration: +document.getElementById("horizon").value,
+      liquidity_needs: +document.getElementById("liq").value,
+      expected_returns: +document.getElementById("ret").value
+    })
+  })
+  .then(res => {
+      if (!res.ok) throw new Error("API Response not ok");
+      return res.json();
+  })
+  .then(data => renderExplainability(data))
+  .catch(err => {
+      console.error("Explainability API failed:", err);
+      // Optional: Hide the explainability section if API fails
+      // document.getElementById("riskExplainSection").style.display = "none";
+  });
 }
 
 function renderProjection(funds) {
   const avg3y = funds.reduce((a, b) => a + b.returns[2], 0) / funds.length;
   const ctx = document.getElementById('mainChart').getContext('2d');
-  
+
   let vals = [100000];
   let lbls = ["Base"];
   const list = document.getElementById('yoy-list');
   list.innerHTML = '';
 
-  for(let i=1; i<=5; i++) {
-    const nextVal = vals[i-1] * (1 + avg3y/100);
+  for (let i = 1; i <= 5; i++) {
+    const nextVal = vals[i - 1] * (1 + avg3y / 100);
     vals.push(nextVal);
     lbls.push(`Year ${i}`);
     list.innerHTML += `<div class="yoy-item"><span>Year ${i}</span><b>₹${Math.round(nextVal).toLocaleString()}</b></div>`;
   }
 
-  if(mainChart) mainChart.destroy();
+  if (mainChart) mainChart.destroy();
   mainChart = new Chart(ctx, {
     type: 'line',
     data: {
@@ -102,8 +153,8 @@ function renderProjection(funds) {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: {display: false} },
-      scales: { x: {grid:{display:false}}, y: {ticks:{callback:v => '₹' + v/1000 + 'k'}}}
+      plugins: { legend: { display: false } },
+      scales: { x: { grid: { display: false } }, y: { ticks: { callback: v => '₹' + v / 1000 + 'k' } } }
     }
   });
 }
@@ -132,7 +183,7 @@ function renderFunds(funds) {
         <div class="f-insight">${f.insight}</div>
       </div>
     `;
-    
+
     setTimeout(() => {
       const mCtx = document.getElementById(cId).getContext('2d');
       new Chart(mCtx, {
@@ -147,10 +198,63 @@ function renderFunds(funds) {
         },
         options: {
           responsive: true, maintainAspectRatio: false,
-          plugins: { legend: {display: false} },
-          scales: { y: {display: false}, x: {grid:{display:false}, ticks:{font:{size:10}}} }
+          plugins: { legend: { display: false } },
+          scales: { y: { display: false }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } }
         }
       });
     }, 50);
   });
+}
+
+let riskChart = null;
+
+function renderExplainability(data) {
+  // Safe check: ensure UI elements exist before trying to update them
+  const scoreEl = document.getElementById("risk-score-val");
+  const listEl = document.getElementById("explain-list");
+  const chartEl = document.getElementById("riskExplainChart");
+
+  if (!scoreEl || !listEl || !chartEl) return;
+
+  // Score
+  scoreEl.innerText = data.risk_score.toFixed(2);
+
+  // Text explanations
+  listEl.innerHTML = "";
+  if (data.top_factors && data.top_factors.length > 0) {
+    data.top_factors.forEach(f => {
+      listEl.innerHTML += `
+        <div class="explain-item">
+          <b>${f.feature.replace("_", " ")}</b>: ${humanizeExplanation(f)}
+        </div>
+      `;
+    });
+
+    // Chart
+    const ctx = chartEl.getContext("2d");
+    const labels = data.top_factors.map(f => f.feature.replace("_", " "));
+    const impacts = data.top_factors.map(f => Math.abs(f.impact));
+
+    if (riskChart) riskChart.destroy();
+    
+    riskChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [{
+          data: impacts,
+          backgroundColor: "#2563eb",
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false } },
+          y: { display: false }
+        }
+      }
+    });
+  }
 }
