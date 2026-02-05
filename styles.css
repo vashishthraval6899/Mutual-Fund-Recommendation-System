@@ -124,3 +124,71 @@ body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(
   .projection-section { grid-template-columns: 1fr; }
   .fund-grid { grid-template-columns: 1fr; }
 }
+
+/* EXPLAINABILITY SECTION */
+.explain-section {
+  margin-bottom: 50px;
+}
+
+.explain-box {
+  background: white;
+  padding: 32px;
+  border-radius: 24px;
+  border: 1px solid #e2e8f0;
+}
+
+.explain-box h3 {
+  margin: 0 0 6px 0;
+  font-size: 1.4rem;
+}
+
+.explain-subtitle {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 25px;
+}
+
+.risk-score-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.risk-score-card {
+  background: #eff6ff;
+  border-radius: 20px;
+  padding: 25px;
+  text-align: center;
+}
+
+.risk-score-card span {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.risk-score-card h2 {
+  font-size: 2.6rem;
+  margin: 10px 0 0;
+}
+
+.risk-graph-wrap {
+  height: 200px;
+}
+
+.explain-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.explain-item {
+  background: #f8fafc;
+  border-left: 5px solid var(--accent);
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
