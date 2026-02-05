@@ -537,7 +537,7 @@ function renderFunds(funds) {
   const grid = document.getElementById('fund-grid');
   grid.innerHTML = '';
 
-  funds.forEach((f, i) => {
+  funds.slice(0, 6).forEach((f, i) => {
     const cId = `chart-${i}`;
     grid.innerHTML += `
       <div class="fund-card">
