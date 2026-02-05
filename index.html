@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InvestWise | AI Mutual Fund Recommender</title>
-    
+    <title>InvestWise</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/feather-icons"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,8 +19,7 @@
                 <div class="brand-container">
                     <div class="brand-text">Invest<span>Wise</span></div>
                     <div class="brand-section">
-                         <span class="brand-subtitle">AI-Powered <b>Mutual Fund</b></span>
-                         <span class="developer-credit">Developed by Vashishth</span>
+                        <span class="brand-subtitle">AI Mutual Fund Recommender</span>
                     </div>
                 </div>
             </div>
@@ -32,22 +29,18 @@
                     <div class="header"><span>Age</span><b id="d-age">25</b></div>
                     <input type="range" id="age" class="slider" min="18" max="80" value="25">
                 </div>
-
                 <div class="group">
                     <div class="header"><span>Risk Appetite</span><b id="d-risk">5/10</b></div>
                     <input type="range" id="risk" class="slider risk-accent" min="1" max="10" value="5">
                 </div>
-
                 <div class="group">
                     <div class="header"><span>Duration</span><b id="d-horizon">5Y</b></div>
                     <input type="range" id="horizon" class="slider" min="1" max="30" value="5">
                 </div>
-
                 <div class="group">
-                    <div class="header"><span>Liquidity Needs</span><b id="d-liq">Medium</b></div>
+                    <div class="header"><span>Liquidity</span><b id="d-liq">Medium</b></div>
                     <input type="range" id="liq" class="slider" min="1" max="3" value="2">
                 </div>
-
                 <div class="group">
                     <div class="header"><span>Exp. Returns</span><b id="d-ret">12%</b></div>
                     <input type="range" id="ret" class="slider" min="5" max="30" value="12">
@@ -64,66 +57,54 @@
             <div id="hero-view" class="hero">
                 <div>
                     <i data-feather="pie-chart" class="hero-icon"></i>
-                    <h2>Design Your Perfect Portfolio</h2>
-                    <p style="color:var(--text-muted)">Adjust parameters on the left to get AI-driven recommendations.</p>
+                    <h2>Design Your Portfolio</h2>
+                    <p style="color:var(--text-muted)">Adjust parameters to get AI recommendations.</p>
                 </div>
             </div>
 
             <div id="results-view" class="hidden">
-                
                 <div class="dash-header">
                     <div>
                         <span class="badge">STRATEGY</span>
                         <h2 id="strategy-name">Growth & Stability</h2>
                     </div>
-                    <div>
-                        <button class="primary-btn" onclick="location.reload()" style="padding: 10px 20px; font-size: 0.9rem;">Reset</button>
+                </div>
+
+                <div class="explain-container" id="riskExplainSection">
+                    <div class="chart-box" style="margin-bottom: 30px;">
+                        <div class="group header" style="margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
+                            <span>AI Risk Analysis</span>
+                            <b id="risk-score-val" style="background: #dbeafe; color: #1e40af; font-size: 0.9rem;">--</b>
+                        </div>
+                        <div class="explain-layout">
+                            <div class="explain-text" id="explain-list">
+                                <div style="color:var(--text-muted); font-size:0.9rem;">Loading analysis...</div>
+                            </div>
+                            <div class="explain-chart">
+                                <canvas id="riskExplainChart"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="explain-section" id="riskExplainSection">
-                    <div class="explain-box">
-                        <h3>Why this Risk Score?</h3>
-                        <p class="explain-subtitle">Our AI analyzed your profile to determine your risk capacity.</p>
-                        
-                        <div class="risk-score-row">
-                            <div class="risk-score-card">
-                                <span>Your Risk Score</span>
-                                <h2 id="risk-score-val">--</h2> 
-                            </div>
-                
-                            <div id="explain-list" class="explain-list">
-                                <div class="explain-item">Generating explanation...</div>
-                            </div>
-                        </div>
-                
-                        <div class="risk-graph-wrap">
-                            <canvas id="riskExplainChart"></canvas> 
-                        </div>
-                    </div>
-                </div>
                 <div class="projection-section">
                     <div class="chart-box">
-                        <div class="group .header" style="margin-bottom:15px;"><span>Wealth Projection (5Y)</span></div>
+                        <div class="group header" style="margin-bottom:15px;"><span>Wealth Projection</span></div>
                         <div class="canvas-wrap"><canvas id="mainChart"></canvas></div>
                     </div>
                     <div class="values-box">
-                        <div class="group .header" style="margin-bottom:15px;"><span>Year-on-Year Growth</span></div>
+                        <div class="group header" style="margin-bottom:15px;"><span>Growth</span></div>
                         <div id="yoy-list"></div>
                     </div>
                 </div>
 
-                <h3 style="margin-bottom: 25px;">Top Recommended Funds</h3>
+                <h3 style="margin: 30px 0 20px 0;">Top Recommendations</h3>
                 <div id="fund-grid" class="fund-grid"></div>
-
             </div>
         </div>
-
     </div>
 
     <script src="script.js"></script>
-    <script>
-        feather.replace();
-    </script>
+    <script>feather.replace();</script>
 </body>
 </html>
