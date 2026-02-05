@@ -87,6 +87,72 @@
         </div>
       </section>
 
+      <!-- RISK & SHAP SECTION - Add this -->
+      <section class="risk-shap-section hidden" id="risk-section">
+        <div class="section-header">
+          <h3>📊 Risk Analysis & Feature Impact</h3>
+          <p>Understand how each factor influences your risk score</p>
+        </div>
+      
+        <div class="risk-shap-grid">
+          <!-- Risk Score Card -->
+          <div class="risk-card">
+            <div class="risk-header">
+              <h4>Risk Score</h4>
+              <div class="risk-badge" id="risk-level">MODERATE</div>
+            </div>
+            <div class="score-container">
+              <div class="circular-score">
+                <div class="score-value" id="risk-score">0.531</div>
+                <div class="score-label">out of 1.0</div>
+              </div>
+              <div class="risk-info">
+                <p id="risk-description">Your score indicates a balanced risk profile suitable for diversified growth strategies.</p>
+                <div class="risk-bands">
+                  <div class="band"><span class="dot low"></span> Low: 0-0.33</div>
+                  <div class="band"><span class="dot moderate"></span> Moderate: 0.34-0.66</div>
+                  <div class="band"><span class="dot high"></span> High: 0.67-1.0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+          <!-- SHAP Chart -->
+          <div class="shap-card">
+            <div class="shap-header">
+              <h4>Feature Impact</h4>
+              <p>How each factor affects your risk score</p>
+            </div>
+            <div class="chart-container">
+              <canvas id="shapChart"></canvas>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Top Factors Table -->
+        <div class="factors-card">
+          <div class="table-header">
+            <h4>Top Contributing Factors</h4>
+            <p>Detailed breakdown of feature impacts</p>
+          </div>
+          <div class="table-responsive">
+            <table id="factors-table">
+              <thead>
+                <tr>
+                  <th>Factor</th>
+                  <th>Your Value</th>
+                  <th>Impact</th>
+                  <th>Direction</th>
+                </tr>
+              </thead>
+              <tbody id="factors-body">
+                <!-- Will be populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
       <section class="funds-section">
         <div class="section-title">
           <h3>Top 8 Quantitative Fund Picks</h3>
