@@ -1,33 +1,33 @@
 const FUND_DATA = {
   "Growth & Stability": [
-    { name: "DSP Credit Risk Fund-Reg(G)", cat: "Debt", returns: [21.58, 14.47, 14.87], aum: "208 Cr", expense: "1.2%", beta: 0.18, sharpe: 0.29, insight: "Market-leading credit pick with a Quality Score of 78%." },
-    { name: "ICICI Pru BSE Sensex ETF", cat: "Equity", returns: [7.18, 15.15, 12.4], aum: "23,155 Cr", expense: "0.02%", beta: 0.98, sharpe: 0.2, insight: "Passive benchmark tracking with exceptional efficiency score of 76%." },
-    { name: "HSBC Credit Risk Fund-Reg(G)", cat: "Debt", returns: [20.62, 13.66, 11.25], aum: "562 Cr", expense: "1.64%", beta: 0.66, sharpe: 0.2, insight: "Consistent debt performance with superior capital appreciation." },
-    { name: "Franklin India Income Plus Arbitrage Active FOF", cat: "FoFs", returns: [13.1, 15.6, 14.14], aum: "76 Cr", expense: "0.53%", beta: 0.94, sharpe: 0.42, insight: "Strategic asset allocation with a 74% quality confidence." },
-    { name: "ICICI Pru Multi-Asset Fund(G)", cat: "Hybrid", returns: [12.92, 20.54, 19.34], aum: "68,000 Cr", expense: "1.38%", beta: 0.46, sharpe: 0.59, insight: "Scale stability for diversified hybrid portfolios (73% Quality)." },
-    { name: "Parag Parikh Flexi Cap Fund", cat: "Equity", returns: [8.68, 21.08, 21.65], aum: "1.19L Cr", expense: "1.28%", beta: 0.57, sharpe: 0.49, insight: "Premium flexibility across caps with strong downside protection." },
-    { name: "HDFC Multi-Asset Active FOF-Reg(G)", cat: "FoFs", returns: [11.46, 17.41, 16.21], aum: "4,793 Cr", expense: "1.1%", beta: 0.48, sharpe: 0.5, insight: "Active management across diverse fund categories for stability." },
-    { name: "Kotak Nifty Midcap 50 ETF", cat: "Equity", returns: [10.29, 23.2, 25.36], aum: "80 Cr", expense: "0.05%", beta: 1.0, sharpe: 0.36, insight: "Focused mid-cap growth at institutional low expense ratios." }
+    { name: "DSP Credit Risk Fund-Reg(G)", cat: "Debt", returns: [21.58, 14.47, 14.87], aum: "208 Cr", expense: "1.2%", beta: 0.18, sharpe: 0.29, quality: "78.3%", insight: "Market-leading credit pick with a Quality Score of 78.3%." },
+    { name: "ICICI Pru BSE Sensex ETF", cat: "Equity", returns: [7.18, 15.15, 12.4], aum: "23,155 Cr", expense: "0.02%", beta: 0.98, sharpe: 0.2, quality: "75.7%", insight: "Passive benchmark tracking with exceptional efficiency score of 75.7%." },
+    { name: "HSBC Credit Risk Fund-Reg(G)", cat: "Debt", returns: [20.62, 13.66, 11.25], aum: "562 Cr", expense: "1.64%", beta: 0.66, sharpe: 0.2, quality: "75.5%", insight: "Consistent debt performance with superior capital appreciation. Quality Score: 75.5%" },
+    { name: "Franklin India Income Plus Arbitrage Active FOF", cat: "FoFs", returns: [13.1, 15.6, 14.14], aum: "76 Cr", expense: "0.53%", beta: 0.94, sharpe: 0.42, quality: "73.9%", insight: "Strategic asset allocation with a 73.9% quality confidence." },
+    { name: "ICICI Pru Multi-Asset Fund(G)", cat: "Hybrid", returns: [12.92, 20.54, 19.34], aum: "68,000 Cr", expense: "1.38%", beta: 0.46, sharpe: 0.59, quality: "73.3%", insight: "Scale stability for diversified hybrid portfolios (73.3% Quality)." },
+    { name: "Parag Parikh Flexi Cap Fund", cat: "Equity", returns: [8.68, 21.08, 21.65], aum: "1.19L Cr", expense: "1.28%", beta: 0.57, sharpe: 0.49, quality: "73.2%", insight: "Premium flexibility across caps with strong downside protection. Quality: 73.2%" },
+    { name: "HDFC Multi-Asset Active FOF-Reg(G)", cat: "FoFs", returns: [11.46, 17.41, 16.21], aum: "4,793 Cr", expense: "1.1%", beta: 0.48, sharpe: 0.5, quality: "72.2%", insight: "Active management across diverse fund categories for stability. Quality Score: 72.2%" },
+    { name: "Kotak Nifty Midcap 50 ETF", cat: "Equity", returns: [10.29, 23.2, 25.36], aum: "80 Cr", expense: "0.05%", beta: 1.0, sharpe: 0.36, quality: "72.1%", insight: "Focused mid-cap growth at institutional low expense ratios. Quality: 72.1%" }
   ],
   "Capital Preservation": [
-    { name: "Bank of India Overnight Fund", cat: "Debt", returns: [6.1, 6.45, 6.51], aum: "34 Cr", expense: "0.1%", beta: 0.98, sharpe: -0.36, insight: "Maximum safety profile with a perfect 100% Quality Score." },
-    { name: "Axis Overnight Fund-Reg(G)", cat: "Debt", returns: [6.02, 6.37, 6.43], aum: "8,743 Cr", expense: "0.11%", beta: 0.74, sharpe: -0.51, insight: "Highly liquid vehicle for institutional grade capital preservation." },
-    { name: "UTI Overnight Fund-Reg(G)", cat: "Debt", returns: [5.97, 6.33, 6.39], aum: "6,559 Cr", expense: "0.11%", beta: 1.0, sharpe: -0.59, insight: "Consistent daily liquidity with ultra-low credit risk (99% Quality)." },
-    { name: "Canara Rob Overnight Fund", cat: "Debt", returns: [5.93, 6.28, 6.35], aum: "265 Cr", expense: "0.09%", beta: 0.95, sharpe: -0.7, insight: "Optimized expense structure for preservation-focused portfolios." },
-    { name: "Invesco India Overnight Fund", cat: "Debt", returns: [5.95, 6.32, 6.38], aum: "644 Cr", expense: "0.12%", beta: 0.76, sharpe: -0.61, insight: "Reliable yield stability for very short investment windows." },
-    { name: "Franklin India Overnight Fund", cat: "Debt", returns: [5.98, 6.3, 6.35], aum: "486 Cr", expense: "0.11%", beta: 0.71, sharpe: -0.71, insight: "Tier-1 liquidity asset with consistent performance benchmarks." },
-    { name: "Nippon India Overnight Fund", cat: "Debt", returns: [5.97, 6.31, 6.37], aum: "6,760 Cr", expense: "0.16%", beta: 1.0, sharpe: -0.63, insight: "High-volume overnight desk managing stability for large portfolios." },
-    { name: "Baroda BNP Paribas Overnight Fund", cat: "Debt", returns: [5.94, 6.3, 6.37], aum: "457 Cr", expense: "0.17%", beta: 1.01, sharpe: -0.64, insight: "Consistent daily returns with minimal price volatility (98% Quality)." }
+    { name: "Bank of India Overnight Fund", cat: "Debt", returns: [6.1, 6.45, 6.51], aum: "34 Cr", expense: "0.1%", beta: 0.98, sharpe: -0.36, quality: "100%", insight: "Maximum safety profile with a perfect 100% Quality Score." },
+    { name: "Axis Overnight Fund-Reg(G)", cat: "Debt", returns: [6.02, 6.37, 6.43], aum: "8,743 Cr", expense: "0.11%", beta: 0.74, sharpe: -0.51, quality: "99.5%", insight: "Highly liquid vehicle for institutional grade capital preservation. Quality: 99.5%" },
+    { name: "UTI Overnight Fund-Reg(G)", cat: "Debt", returns: [5.97, 6.33, 6.39], aum: "6,559 Cr", expense: "0.11%", beta: 1.0, sharpe: -0.59, quality: "99.3%", insight: "Consistent daily liquidity with ultra-low credit risk (99.3% Quality)." },
+    { name: "Canara Rob Overnight Fund", cat: "Debt", returns: [5.93, 6.28, 6.35], aum: "265 Cr", expense: "0.09%", beta: 0.95, sharpe: -0.7, quality: "99.0%", insight: "Optimized expense structure for preservation-focused portfolios. Quality: 99.0%" },
+    { name: "Invesco India Overnight Fund", cat: "Debt", returns: [5.95, 6.32, 6.38], aum: "644 Cr", expense: "0.12%", beta: 0.76, sharpe: -0.61, quality: "98.8%", insight: "Reliable yield stability for very short investment windows. Quality: 98.8%" },
+    { name: "Franklin India Overnight Fund", cat: "Debt", returns: [5.98, 6.3, 6.35], aum: "486 Cr", expense: "0.11%", beta: 0.71, sharpe: -0.71, quality: "98.8%", insight: "Tier-1 liquidity asset with consistent performance benchmarks. Quality: 98.8%" },
+    { name: "Nippon India Overnight Fund", cat: "Debt", returns: [5.97, 6.31, 6.37], aum: "6,760 Cr", expense: "0.16%", beta: 1.0, sharpe: -0.63, quality: "98.6%", insight: "High-volume overnight desk managing stability for large portfolios. Quality: 98.6%" },
+    { name: "Baroda BNP Paribas Overnight Fund", cat: "Debt", returns: [5.94, 6.3, 6.37], aum: "457 Cr", expense: "0.17%", beta: 1.01, sharpe: -0.64, quality: "98.3%", insight: "Consistent daily returns with minimal price volatility (98.3% Quality)." }
   ],
   "High-Alpha Aggressive": [
-    { name: "Mirae Asset NYSE FANG+ETF FoF", cat: "FoFs", returns: [81.73, 67.49, 71.07], aum: "2,347 Cr", expense: "0.45%", beta: 0.47, sharpe: 0.49, insight: "Explosive growth potential in global tech (97% Quality Score)." },
-    { name: "Mirae Asset NYSE FANG+ ETF", cat: "Equity", returns: [49.31, 53.07, 60.85], aum: "3,492 Cr", expense: "0.65%", beta: 0.88, sharpe: 0.47, insight: "Direct exposure to top 10 global giants with high alpha." },
-    { name: "HDFC Silver ETF FoF-Reg(G)", cat: "Gold/Commodity", returns: [50.51, 40.55, 33.05], aum: "1,273 Cr", expense: "0.6%", beta: 0.04, sharpe: 0.35, insight: "Precious metal alpha for inflation hedging and diversification." },
-    { name: "DSP World Gold Mining FoF", cat: "FoFs", returns: [80.51, 61.6, 44.46], aum: "1,678 Cr", expense: "2.34%", beta: 0.25, sharpe: 0.38, insight: "Commodity mining exposure for non-correlated portfolio returns." },
-    { name: "Quantum Gold Saving Fund", cat: "Gold", returns: [51.16, 38.59, 31.91], aum: "299 Cr", expense: "0.45%", beta: 0.38, sharpe: 0.49, insight: "Efficient gold tracking with high-tier liquidity (79% Quality)." },
-    { name: "Mirae Asset S&P 500 Top 50 FoF", cat: "FoFs", returns: [55.57, 48.07, 40.6], aum: "752 Cr", expense: "0.49%", beta: 0.3, sharpe: 0.4, insight: "Strategic US Large Cap allocation for global alpha capture." },
-    { name: "Kotak Gold Fund(G)", cat: "Gold", returns: [50.53, 37.85, 31.5], aum: "4,153 Cr", expense: "0.5%", beta: 0.36, sharpe: 0.48, insight: "Stable commodity benchmark with consistent long-term growth." },
-    { name: "Kotak Gold ETF", cat: "Gold", returns: [51.5, 38.7, 32.2], aum: "9,736 Cr", expense: "0.55%", beta: 0.48, sharpe: 0.49, insight: "High-volume gold asset optimized for active aggressive strategies." }
+    { name: "Mirae Asset NYSE FANG+ETF FoF", cat: "FoFs", returns: [81.73, 67.49, 71.07], aum: "2,347 Cr", expense: "0.45%", beta: 0.47, sharpe: 0.49, quality: "97.0%", insight: "Explosive growth potential in global tech (97.0% Quality Score)." },
+    { name: "Mirae Asset NYSE FANG+ ETF", cat: "Equity", returns: [49.31, 53.07, 60.85], aum: "3,492 Cr", expense: "0.65%", beta: 0.88, sharpe: 0.47, quality: "84.0%", insight: "Direct exposure to top 10 global giants with high alpha. Quality: 84.0%" },
+    { name: "HDFC Silver ETF FoF-Reg(G)", cat: "Gold/Commodity", returns: [50.51, 40.55, 33.05], aum: "1,273 Cr", expense: "0.6%", beta: 0.04, sharpe: 0.35, quality: "82.8%", insight: "Precious metal alpha for inflation hedging and diversification. Quality: 82.8%" },
+    { name: "DSP World Gold Mining FoF", cat: "FoFs", returns: [80.51, 61.6, 44.46], aum: "1,678 Cr", expense: "2.34%", beta: 0.25, sharpe: 0.38, quality: "79.9%", insight: "Commodity mining exposure for non-correlated portfolio returns. Quality: 79.9%" },
+    { name: "Quantum Gold Saving Fund", cat: "Gold", returns: [51.16, 38.59, 31.91], aum: "299 Cr", expense: "0.45%", beta: 0.38, sharpe: 0.49, quality: "79.3%", insight: "Efficient gold tracking with high-tier liquidity (79.3% Quality)." },
+    { name: "Mirae Asset S&P 500 Top 50 FoF", cat: "FoFs", returns: [55.57, 48.07, 40.6], aum: "752 Cr", expense: "0.49%", beta: 0.3, sharpe: 0.4, quality: "79.3%", insight: "Strategic US Large Cap allocation for global alpha capture. Quality: 79.3%" },
+    { name: "Kotak Gold Fund(G)", cat: "Gold", returns: [50.53, 37.85, 31.5], aum: "4,153 Cr", expense: "0.5%", beta: 0.36, sharpe: 0.48, quality: "79.2%", insight: "Stable commodity benchmark with consistent long-term growth. Quality: 79.2%" },
+    { name: "Kotak Gold ETF", cat: "Gold", returns: [51.5, 38.7, 32.2], aum: "9,736 Cr", expense: "0.55%", beta: 0.48, sharpe: 0.49, quality: "79.0%", insight: "High-volume gold asset optimized for active aggressive strategies. Quality: 79.0%" }
   ]
 };
 
@@ -50,6 +50,19 @@ let riskData = null;
 
 // API Configuration
 const API_URL = "https://mf-recommender-backend-production.up.railway.app/";
+
+// Sort funds by quality score (descending) and return top 6
+function getTopFundsByQuality(funds) {
+  // First, sort by quality score (convert percentage to number)
+  return funds
+    .map(fund => ({
+      ...fund,
+      qualityNum: parseFloat(fund.quality) // Convert "78.3%" to 78.3
+    }))
+    .sort((a, b) => b.qualityNum - a.qualityNum) // Sort descending
+    .slice(0, 6) // Take top 6
+    .map(({ qualityNum, ...rest }) => rest); // Remove the temporary qualityNum
+}
 
 // Call your actual API
 async function callRiskAPI(inputs) {
@@ -200,8 +213,9 @@ async function generateStrategy() {
     document.getElementById('match-pct').innerText = calculateMatchPercentage(riskData.risk_score) + '%';
 
     const funds = FUND_DATA[cluster];
-    renderProjection(funds);
-    renderFunds(funds);
+    const sortedFunds = getTopFundsByQuality(funds); // Get top 6 sorted by quality
+    renderProjection(sortedFunds);
+    renderFunds(sortedFunds);
     
     feather.replace();
     
@@ -537,12 +551,15 @@ function renderFunds(funds) {
   const grid = document.getElementById('fund-grid');
   grid.innerHTML = '';
 
-  funds.slice(0, 6).forEach((f, i) => {
+  funds.forEach((f, i) => {
     const cId = `chart-${i}`;
     grid.innerHTML += `
       <div class="fund-card">
         <div class="f-head">
-          <span class="f-cat">${f.cat}</span>
+          <div class="f-cat-row">
+            <span class="f-cat">${f.cat}</span>
+            <span class="f-quality">Quality: ${f.quality}</span>
+          </div>
           <div class="f-name">${f.name}</div>
         </div>
         <div class="f-analytics">
@@ -550,8 +567,8 @@ function renderFunds(funds) {
           <div class="f-metrics">
             <div class="m-item"><label>AUM</label><div>${f.aum}</div></div>
             <div class="m-item"><label>Exp. Ratio</label><div>${f.expense}</div></div>
-            <div class="m-item"><label>Beta</label><div>${f.beta}</div></div>
-            <div class="m-item"><label>Sharpe</label><div>${f.sharpe}</div></div>
+            <div class="m-item"><label>Quality Score</label><div>${f.quality}</div></div>
+            <div class="m-item"><label>Sharpe Ratio</label><div>${f.sharpe}</div></div>
           </div>
         </div>
         <div class="f-insight">${f.insight}</div>
