@@ -101,10 +101,34 @@ body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(
 
 .f-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .m-item { background: #f1f5f9; padding: 10px; border-radius: 12px; }
-.m-item label { font-size: 0.65rem; color: var(--text-muted); display: block; }
-.m-item div { font-weight: 700; font-size: 0.9rem; }
+.m-item label { font-size: 0.65rem; color: var(--text-muted); display: block; margin-bottom: 4px; }
+.m-item div { font-weight: 700; font-size: 0.9rem; color: var(--text-main); }
 
 .f-insight { background: #f0fdf4; border-left: 4px solid #22c55e; padding: 15px; border-radius: 8px; font-size: 0.85rem; line-height: 1.5; color: #166534; }
+
+/* Quality Score Styling */
+.f-cat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.f-quality {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+/* Quality Score specific styling */
+.m-item:nth-child(3) div {
+  color: #22c55e;
+  font-weight: 800;
+}
 
 /* ===== ENHANCED RISK & SHAP SECTION ===== */
 .risk-shap-section {
@@ -556,6 +580,83 @@ body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(
   color: #dc2626;
 }
 
+/* Quality Formula Styling */
+.quality-formula {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.formula-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.formula-header i {
+  color: #2563eb;
+  width: 20px;
+  height: 20px;
+}
+
+.formula-header span {
+  font-weight: 700;
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+.formula-details p {
+  margin: 0 0 15px 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.formula-components {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.component {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  padding: 8px 12px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.weight {
+  background: #2563eb;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 40px;
+  text-align: center;
+}
+
+.weight.penalty {
+  background: #ef4444;
+}
+
+.formula-note {
+  font-size: 0.8rem !important;
+  color: #64748b !important;
+  font-style: italic;
+  border-left: 3px solid #2563eb;
+  padding-left: 10px;
+}
+
 /* Match Score */
 .match-score {
   display: flex;
@@ -615,4 +716,7 @@ body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(
   .mini-chart-wrap { height: 200px; }
   .score-container { flex-direction: column; text-align: center; }
   .risk-info { text-align: center; }
+  .formula-components {
+    grid-template-columns: 1fr;
+  }
 }
