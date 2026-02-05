@@ -1,68 +1,104 @@
-    <!-- Add these new sections after the projection-section -->
-    <section class="risk-explanation-section hidden" id="risk-section">
-      <div class="risk-header">
-        <h3>Risk Score & Feature Impact Analysis</h3>
-        <p>Understand how each factor contributes to your personalized risk score using SHAP values</p>
-      </div>
-      
-      <div class="risk-content">
-        <!-- Risk Score Card -->
-        <div class="risk-score-card">
-          <div class="risk-score-header">
-            <h4>Your Risk Score</h4>
-            <div class="risk-level" id="risk-level">Moderate</div>
-          </div>
-          <div class="score-display">
-            <div class="score-circle-large">
-              <svg width="120" height="120" viewBox="0 0 120 120">
-                <circle cx="60" cy="60" r="54" fill="none" stroke="#e2e8f0" stroke-width="12"/>
-                <circle id="risk-meter" cx="60" cy="60" r="54" fill="none" stroke="#2563eb" 
-                        stroke-width="12" stroke-linecap="round" 
-                        transform="rotate(-90 60 60)"
-                        stroke-dasharray="339.292" stroke-dashoffset="339.292"/>
-              </svg>
-              <div class="score-text">
-                <span id="risk-score-value">0.00</span>
-                <small>/1.00</small>
-              </div>
-            </div>
-            <div class="score-description">
-              <p id="risk-description">This score represents your overall investment risk profile based on all input factors.</p>
-              <div class="risk-bands">
-                <div class="band low">Low (0-0.33)</div>
-                <div class="band moderate">Moderate (0.34-0.66)</div>
-                <div class="band high">High (0.67-1.00)</div>
-              </div>
-            </div>
-          </div>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InvestWise | Mutual Fund Recommendation System</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/feather-icons"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
 
-        <!-- SHAP Impact Graph -->
-        <div class="shap-graph-card">
-          <h4>Feature Impact Analysis</h4>
-          <p>How each factor affects your risk score</p>
-          <div class="canvas-wrap"><canvas id="shapChart"></canvas></div>
+<div class="app-shell">
+  <aside class="sidebar">
+      <div class="brand-section">
+        <div class="brand">
+          <div class="brand-logo"><i data-feather="trending-up"></i></div>
+          <div class="brand-text">Invest<span>Wise</span></div>
         </div>
+        <p class="brand-subtitle">A Project by <b>Vashishth Raval</b></p>
+    </div>
+
+    <div class="control-panel">
+
+    <div class="control-panel">
+      <div class="group">
+        <div class="header"><span>Age</span> <b id="d-age">30</b></div>
+        <input type="range" id="age" min="18" max="75" value="30" class="slider">
       </div>
 
-      <!-- Top Factors Table -->
-      <div class="factors-table">
-        <h4>Top Contributing Factors</h4>
-        <div class="table-container">
-          <table id="factors-table">
-            <thead>
-              <tr>
-                <th>Factor</th>
-                <th>Your Value</th>
-                <th>Impact</th>
-                <th>Direction</th>
-                <th>Interpretation</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Will be populated by JavaScript -->
-            </tbody>
-          </table>
-        </div>
+      <div class="group">
+        <div class="header"><span>Risk Appetite</span> <b id="d-risk">7/10</b></div>
+        <input type="range" id="risk" min="1" max="10" value="7" class="slider risk-accent">
       </div>
-    </section>
+
+      <div class="group">
+        <div class="header"><span>Investment Duration</span> <b id="d-horizon">5Y</b></div>
+        <input type="range" id="horizon" min="1" max="5" value="5" class="slider">
+      </div>
+
+      <div class="group">
+        <div class="header"><span>Liquidity Need</span> <b id="d-liq">3/10</b></div>
+        <input type="range" id="liq" min="1" max="10" value="3" class="slider">
+      </div>
+
+      <div class="group">
+        <div class="header"><span>Expected Returns</span> <b id="d-ret">15%</b></div>
+        <input type="range" id="ret" min="4" max="40" value="15" class="slider">
+      </div>
+
+      <button class="primary-btn" onclick="generateStrategy()">
+        Get Top Fund Recommendations <i data-feather="zap"></i>
+      </button>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div id="hero-view" class="hero">
+      <div class="hero-inner">
+        <i data-feather="bar-chart-2" class="hero-icon"></i>
+        <h2>Predictive Portfolio Analysis</h2>
+        <p>Discover top-performing mutual funds filtered by risk-adjusted quality scores.</p>
+      </div>
+    </div>
+
+    <div id="results-view" class="dashboard hidden">
+      <header class="dash-header">
+        <div>
+          <span class="badge">Optimized Recommendation</span>
+          <h2 id="strategy-name">Growth & Stability</h2>
+        </div>
+        <div class="match-score">
+          <div class="score-circle" id="match-pct">96%</div>
+          <span>Selection Fit</span>
+        </div>
+      </header>
+
+      <section class="projection-section">
+        <div class="chart-box">
+          <h3>Simulated Compound Growth (₹1L Base)</h3>
+          <div class="canvas-wrap"><canvas id="mainChart"></canvas></div>
+        </div>
+        <div class="values-box">
+          <h3>Year-on-Year Value</h3>
+          <div id="yoy-list" class="yoy-list"></div>
+        </div>
+      </section>
+
+      <section class="funds-section">
+        <div class="section-title">
+          <h3>Top 8 Quantitative Fund Picks</h3>
+          <p>The highest quality assets within the target cluster based on volatility and yield.</p>
+        </div>
+        <div class="fund-grid" id="fund-grid"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script src="script.js"></script>
+<script>feather.replace();</script>
+</body>
+</html>
