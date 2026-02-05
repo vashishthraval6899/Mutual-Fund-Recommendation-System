@@ -13,7 +13,7 @@ function humanizeExplanation(f) {
     decrease: "pulls your risk lower"
   };
 
-  // Fallback if feature/effect keys are missing
+  // Fallback if keys are missing
   const featureName = nameMap[f.feature] || f.feature;
   const effectText = reasonMap[f.effect] || "impacts your profile";
 
@@ -71,6 +71,7 @@ sliders.forEach(s => {
 });
 
 let mainChart = null;
+let riskChart = null;
 
 function generateStrategy() {
   const risk = parseInt(document.getElementById('risk').value) || 5;
@@ -115,9 +116,61 @@ function generateStrategy() {
   .then(data => renderExplainability(data))
   .catch(err => {
       console.error("Explainability API failed:", err);
-      // Optional: Hide the explainability section if API fails
-      // document.getElementById("riskExplainSection").style.display = "none";
+      // Fallback message if API fails
+      document.getElementById("explain-list").innerHTML = "<div class='explain-item'>Could not fetch explanation details.</div>";
   });
+}
+
+function renderExplainability(data) {
+  // Safe check
+  const scoreEl = document.getElementById("risk-score-val");
+  const listEl = document.getElementById("explain-list");
+  const chartEl = document.getElementById("riskExplainChart");
+
+  if (!scoreEl || !listEl || !chartEl) return;
+
+  // Score
+  scoreEl.innerText = data.risk_score.toFixed(1);
+
+  // Text explanations
+  listEl.innerHTML = "";
+  if (data.top_factors && data.top_factors.length > 0) {
+    data.top_factors.forEach(f => {
+      listEl.innerHTML += `
+        <div class="explain-item">
+          <b>${f.feature.replace("_", " ")}</b>: ${humanizeExplanation(f)}
+        </div>
+      `;
+    });
+
+    // Chart
+    const ctx = chartEl.getContext("2d");
+    const labels = data.top_factors.map(f => f.feature.replace("_", " "));
+    const impacts = data.top_factors.map(f => Math.abs(f.impact));
+
+    if (riskChart) riskChart.destroy();
+    
+    riskChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [{
+          data: impacts,
+          backgroundColor: "#2563eb",
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+          y: { display: false }
+        }
+      }
+    });
+  }
 }
 
 function renderProjection(funds) {
@@ -204,57 +257,4 @@ function renderFunds(funds) {
       });
     }, 50);
   });
-}
-
-let riskChart = null;
-
-function renderExplainability(data) {
-  // Safe check: ensure UI elements exist before trying to update them
-  const scoreEl = document.getElementById("risk-score-val");
-  const listEl = document.getElementById("explain-list");
-  const chartEl = document.getElementById("riskExplainChart");
-
-  if (!scoreEl || !listEl || !chartEl) return;
-
-  // Score
-  scoreEl.innerText = data.risk_score.toFixed(2);
-
-  // Text explanations
-  listEl.innerHTML = "";
-  if (data.top_factors && data.top_factors.length > 0) {
-    data.top_factors.forEach(f => {
-      listEl.innerHTML += `
-        <div class="explain-item">
-          <b>${f.feature.replace("_", " ")}</b>: ${humanizeExplanation(f)}
-        </div>
-      `;
-    });
-
-    // Chart
-    const ctx = chartEl.getContext("2d");
-    const labels = data.top_factors.map(f => f.feature.replace("_", " "));
-    const impacts = data.top_factors.map(f => Math.abs(f.impact));
-
-    if (riskChart) riskChart.destroy();
-    
-    riskChart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: labels,
-        datasets: [{
-          data: impacts,
-          backgroundColor: "#2563eb",
-          borderRadius: 8
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { grid: { display: false } },
-          y: { display: false }
-        }
-      }
-    });
-  }
 }
