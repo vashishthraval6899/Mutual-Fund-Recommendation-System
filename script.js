@@ -45,30 +45,451 @@ sliders.forEach(s => {
 });
 
 let mainChart = null;
+let shapChart = null;
+let riskData = null;
 
-function generateStrategy() {
-  const risk = parseInt(document.getElementById('risk').value);
-  const ret = parseInt(document.getElementById('ret').value);
-  
-  let cluster = "Growth & Stability";
-  if (risk <= 4) cluster = "Capital Preservation";
-  else if (risk >= 8 || ret > 20) cluster = "High-Alpha Aggressive";
+// API Configuration
+const API_URL = "https://mf-recommender-backend-production.up.railway.app/";
 
-  document.getElementById('hero-view').style.display = 'none';
-  document.getElementById('results-view').classList.remove('hidden');
-  document.getElementById('strategy-name').innerText = cluster;
-
-  const funds = FUND_DATA[cluster];
-  renderProjection(funds);
-  renderFunds(funds);
-  feather.replace();
-  
-  // Smooth scroll to results on mobile
-  if(window.innerWidth <= 1024) {
-    document.getElementById('results-view').scrollIntoView({ behavior: 'smooth' });
+// Call your actual API
+async function callRiskAPI(inputs) {
+  try {
+    console.log('Calling API with:', inputs);
+    
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(inputs)
+    });
+    
+    if (!response.ok) {
+      throw new Error(`API responded with status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    console.log('API Response:', data);
+    
+    // Ensure data has expected format
+    if (!data.risk_score && data.risk_score !== 0) {
+      console.warn('API response missing risk_score, using simulation');
+      return simulateRiskData(inputs);
+    }
+    
+    // Ensure top_factors exists and is an array
+    if (!Array.isArray(data.top_factors)) {
+      data.top_factors = calculateTopFactors(inputs);
+    }
+    
+    return data;
+    
+  } catch (error) {
+    console.error('API Error:', error);
+    console.log('Falling back to simulation');
+    return simulateRiskData(inputs);
   }
 }
 
+// Fallback simulation if API fails
+function simulateRiskData(inputs) {
+  return {
+    risk_score: calculateRiskScore(inputs),
+    top_factors: calculateTopFactors(inputs)
+  };
+}
+
+function calculateRiskScore(inputs) {
+  let score = 0.3;
+  score += (inputs.risk_appetite - 5.5) * 0.04;
+  score += (inputs.investment_duration - 3) * 0.05;
+  score += (inputs.liquidity_needs - 5.5) * -0.03;
+  score += (inputs.expected_returns - 12) * 0.02;
+  score = Math.max(0, Math.min(1, score));
+  return parseFloat(score.toFixed(3));
+}
+
+function calculateTopFactors(inputs) {
+  const factors = [
+    {
+      feature: "risk_appetite",
+      value: parseFloat(inputs.risk_appetite),
+      impact: (inputs.risk_appetite - 5.5) * 0.0217,
+      effect: inputs.risk_appetite > 5.5 ? "increase" : "decrease"
+    },
+    {
+      feature: "investment_duration",
+      value: parseFloat(inputs.investment_duration),
+      impact: (inputs.investment_duration - 3) * 0.0198,
+      effect: "increase"
+    },
+    {
+      feature: "liquidity_needs",
+      value: parseFloat(inputs.liquidity_needs),
+      impact: (inputs.liquidity_needs - 5.5) * -0.0137,
+      effect: inputs.liquidity_needs > 5.5 ? "decrease" : "increase"
+    },
+    {
+      feature: "expected_returns",
+      value: parseFloat(inputs.expected_returns),
+      impact: (inputs.expected_returns - 12) * 0.015,
+      effect: "increase"
+    },
+    {
+      feature: "age",
+      value: parseFloat(inputs.age),
+      impact: (inputs.age - 40) * -0.0015,
+      effect: inputs.age > 40 ? "decrease" : "increase"
+    }
+  ];
+  
+  // Sort by absolute impact and return top 3
+  return factors
+    .sort((a, b) => Math.abs(b.impact) - Math.abs(a.impact))
+    .slice(0, 3)
+    .map(factor => ({
+      ...factor,
+      impact: parseFloat(factor.impact.toFixed(4))
+    }));
+}
+
+// Main function - modified to include risk analysis
+async function generateStrategy() {
+  // Show loading state
+  const button = document.querySelector('.primary-btn');
+  const originalText = button.innerHTML;
+  button.innerHTML = '<i data-feather="loader" class="spin"></i> Analyzing Risk...';
+  feather.replace();
+  
+  // Collect inputs
+  const inputs = {
+    age: parseInt(document.getElementById('age').value),
+    risk_appetite: parseInt(document.getElementById('risk').value),
+    investment_duration: parseInt(document.getElementById('horizon').value),
+    liquidity_needs: parseInt(document.getElementById('liq').value),
+    expected_returns: parseInt(document.getElementById('ret').value)
+  };
+
+  try {
+    // 1. Call API for risk data
+    riskData = await callRiskAPI(inputs);
+    
+    // 2. Show all sections
+    document.getElementById('hero-view').style.display = 'none';
+    document.getElementById('results-view').classList.remove('hidden');
+    document.getElementById('risk-section').classList.remove('hidden');
+    
+    // 3. Update risk score visualization
+    updateRiskScore(riskData);
+    
+    // 4. Update SHAP chart
+    updateSHAPChart(riskData.top_factors);
+    
+    // 5. Update factors table
+    updateFactorsTable(riskData.top_factors, inputs);
+    
+    // 6. Determine strategy cluster
+    const risk = parseInt(document.getElementById('risk').value);
+    const ret = parseInt(document.getElementById('ret').value);
+    
+    let cluster = "Growth & Stability";
+    if (risk <= 4) cluster = "Capital Preservation";
+    else if (risk >= 8 || ret > 20) cluster = "High-Alpha Aggressive";
+
+    document.getElementById('strategy-name').innerText = cluster;
+    document.getElementById('match-pct').innerText = calculateMatchPercentage(riskData.risk_score) + '%';
+
+    const funds = FUND_DATA[cluster];
+    renderProjection(funds);
+    renderFunds(funds);
+    
+    feather.replace();
+    
+    // Smooth scroll on mobile
+    if(window.innerWidth <= 1024) {
+      document.getElementById('results-view').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+  } catch (error) {
+    console.error('Error in generateStrategy:', error);
+    alert('There was an error analyzing your risk profile. Please try again.');
+  } finally {
+    // Restore button
+    button.innerHTML = originalText;
+    feather.replace();
+  }
+}
+
+function calculateMatchPercentage(riskScore) {
+  // Calculate match percentage based on risk score and strategy
+  const risk = parseInt(document.getElementById('risk').value);
+  const ret = parseInt(document.getElementById('ret').value);
+  
+  let baseScore = 85;
+  
+  // Adjust based on risk alignment
+  const riskVal = parseFloat(riskScore);
+  if (riskVal <= 0.33 && risk <= 4) baseScore += 10;
+  else if (riskVal > 0.66 && risk >= 8) baseScore += 10;
+  else if (riskVal > 0.33 && riskVal <= 0.66 && risk > 4 && risk < 8) baseScore += 10;
+  
+  return Math.min(98, baseScore);
+}
+
+function updateRiskScore(data) {
+  const score = parseFloat(data.risk_score);
+  const scoreElement = document.getElementById('risk-score');
+  const levelElement = document.getElementById('risk-level');
+  const descriptionElement = document.getElementById('risk-description');
+  
+  // Update score
+  scoreElement.textContent = score.toFixed(3);
+  
+  // Update level and colors
+  let level, color, description;
+  
+  if (score <= 0.33) {
+    level = "LOW";
+    color = "#22c55e";
+    description = "Conservative profile ideal for capital preservation and stable returns.";
+  } else if (score <= 0.66) {
+    level = "MODERATE";
+    color = "#eab308";
+    description = "Balanced profile suitable for growth-oriented strategies with controlled risk.";
+  } else {
+    level = "HIGH";
+    color = "#ef4444";
+    description = "Aggressive profile optimized for maximum growth potential with higher volatility.";
+  }
+  
+  levelElement.textContent = level;
+  levelElement.style.background = color + "20";
+  levelElement.style.color = color;
+  levelElement.style.border = `1px solid ${color}40`;
+  
+  descriptionElement.textContent = description;
+  
+  // Update circular indicator
+  updateCircularScore(score);
+}
+
+function updateCircularScore(score) {
+  const circularScore = document.querySelector('.circular-score');
+  
+  // Remove any existing indicator
+  const existingIndicator = document.querySelector('.score-indicator');
+  if (existingIndicator) existingIndicator.remove();
+  
+  // Create new indicator
+  const angle = score * 360;
+  const indicator = document.createElement('div');
+  indicator.className = 'score-indicator';
+  indicator.style.cssText = `
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 3px;
+    height: 15px;
+    background: var(--text-main);
+    transform-origin: bottom center;
+    transform: translateX(-50%) rotate(${angle}deg);
+    border-radius: 2px;
+    z-index: 10;
+  `;
+  
+  circularScore.appendChild(indicator);
+  
+  // Update color based on score
+  const scoreElement = document.querySelector('.score-value');
+  if (score <= 0.33) {
+    scoreElement.style.color = '#22c55e';
+  } else if (score <= 0.66) {
+    scoreElement.style.color = '#eab308';
+  } else {
+    scoreElement.style.color = '#ef4444';
+  }
+}
+
+function updateSHAPChart(factors) {
+  const ctx = document.getElementById('shapChart').getContext('2d');
+  
+  // Destroy existing chart
+  if (shapChart) {
+    shapChart.destroy();
+  }
+  
+  // Format data - sort by absolute impact
+  const sortedFactors = [...factors].sort((a, b) => Math.abs(b.impact) - Math.abs(a.impact));
+  const labels = sortedFactors.map(f => 
+    f.feature.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+  );
+  const data = sortedFactors.map(f => Math.abs(f.impact));
+  const colors = sortedFactors.map(f => 
+    f.effect === 'increase' ? '#ef4444' : '#22c55e'
+  );
+  
+  // Create chart
+  shapChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: colors,
+        borderRadius: 6,
+        borderWidth: 0
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (context) => {
+              const factor = sortedFactors[context.dataIndex];
+              const direction = factor.effect === 'increase' ? 'increases' : 'decreases';
+              return `${direction} risk by ${Math.abs(factor.impact).toFixed(4)}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          beginAtZero: true,
+          grid: { 
+            display: true,
+            color: '#f1f5f9'
+          },
+          ticks: {
+            callback: (value) => value.toFixed(3),
+            font: {
+              size: 11
+            }
+          },
+          title: {
+            display: true,
+            text: 'Impact Magnitude',
+            font: {
+              size: 12,
+              weight: '600'
+            }
+          }
+        },
+        y: {
+          grid: { 
+            display: false
+          },
+          ticks: { 
+            font: { 
+              size: 12,
+              weight: '600'
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function updateFactorsTable(factors, inputs) {
+  const tbody = document.getElementById('factors-body');
+  tbody.innerHTML = '';
+  
+  // Feature name mapping
+  const featureNames = {
+    'risk_appetite': 'Risk Appetite',
+    'investment_duration': 'Investment Duration',
+    'liquidity_needs': 'Liquidity Needs',
+    'expected_returns': 'Expected Returns',
+    'age': 'Age'
+  };
+  
+  // Value formatting
+  const formatValue = (feature, value) => {
+    switch(feature) {
+      case 'risk_appetite':
+      case 'liquidity_needs':
+        return `${value}/10`;
+      case 'investment_duration':
+        return `${value} years`;
+      case 'expected_returns':
+        return `${value}%`;
+      case 'age':
+        return `${value} years`;
+      default:
+        return value;
+    }
+  };
+  
+  // Interpretation mapping
+  const getInterpretation = (feature, value, effect) => {
+    switch(feature) {
+      case 'risk_appetite':
+        return value > 7 ? 'High risk tolerance indicates comfort with volatility' :
+               value > 4 ? 'Moderate risk tolerance suggests balanced approach' :
+               'Low risk tolerance favors conservative investments';
+      case 'investment_duration':
+        return value > 3 ? 'Longer duration allows for higher risk-taking' :
+               'Short duration requires liquidity and stability';
+      case 'liquidity_needs':
+        return value > 7 ? 'High liquidity need requires accessible assets' :
+               'Lower liquidity need allows for higher-yield investments';
+      case 'expected_returns':
+        return value > 15 ? 'High return expectations require accepting higher risk' :
+               value > 10 ? 'Moderate return expectations with balanced risk' :
+               'Conservative return expectations prioritize safety';
+      case 'age':
+        return value < 30 ? 'Younger investors typically have higher risk capacity' :
+               value < 50 ? 'Mid-age investors balance growth and preservation' :
+               'Older investors generally prefer capital preservation';
+      default:
+        return effect === 'increase' ? 'Increases overall risk' : 'Decreases overall risk';
+    }
+  };
+  
+  // Add rows
+  factors.forEach(factor => {
+    const row = document.createElement('tr');
+    
+    row.innerHTML = `
+      <td>
+        <div class="factor-name">${featureNames[factor.feature] || factor.feature}</div>
+        <div class="factor-hint">${getInterpretation(factor.feature, factor.value, factor.effect)}</div>
+      </td>
+      <td><span class="factor-value">${formatValue(factor.feature, factor.value)}</span></td>
+      <td class="${factor.impact > 0 ? 'impact-positive' : 'impact-negative'}">
+        ${factor.impact > 0 ? '+' : ''}${Math.abs(factor.impact).toFixed(4)}
+      </td>
+      <td>
+        <span class="direction ${factor.effect}">
+          ${factor.effect === 'increase' ? '↑ Increases' : '↓ Decreases'}
+        </span>
+      </td>
+    `;
+    
+    tbody.appendChild(row);
+  });
+  
+  // Add some CSS for the hint text
+  if (!document.querySelector('#factor-hint-style')) {
+    const style = document.createElement('style');
+    style.id = 'factor-hint-style';
+    style.textContent = `
+      .factor-hint {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 4px;
+        line-height: 1.3;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+}
+
+// Your existing functions - keep them exactly as they were
 function renderProjection(funds) {
   const avg3y = funds.reduce((a, b) => a + b.returns[2], 0) / funds.length;
   const ctx = document.getElementById('mainChart').getContext('2d');
@@ -154,3 +575,60 @@ function renderFunds(funds) {
     }, 50);
   });
 }
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+  // Add spinner animation for loader
+  if (!document.querySelector('#spinner-style')) {
+    const style = document.createElement('style');
+    style.id = 'spinner-style';
+    style.textContent = `
+      .spin {
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Pre-select some values for better demo
+  document.getElementById('risk').value = 7;
+  document.getElementById('d-risk').textContent = '7/10';
+  
+  feather.replace();
+  
+  // Add debug button if needed (remove in production)
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    const debugBtn = document.createElement('button');
+    debugBtn.textContent = 'Debug API';
+    debugBtn.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 8px 12px;
+      background: #666;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      z-index: 1000;
+    `;
+    debugBtn.onclick = async () => {
+      const inputs = {
+        age: parseInt(document.getElementById('age').value),
+        risk_appetite: parseInt(document.getElementById('risk').value),
+        investment_duration: parseInt(document.getElementById('horizon').value),
+        liquidity_needs: parseInt(document.getElementById('liq').value),
+        expected_returns: parseInt(document.getElementById('ret').value)
+      };
+      console.log('Debug - API Inputs:', inputs);
+      const result = await callRiskAPI(inputs);
+      console.log('Debug - API Result:', result);
+    };
+    document.body.appendChild(debugBtn);
+  }
+});
