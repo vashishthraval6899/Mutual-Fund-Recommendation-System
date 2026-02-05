@@ -153,7 +153,7 @@ function calculateTopFactors(inputs) {
     }));
 }
 
-// Main function - modified to include risk analysis
+// Main function
 async function generateStrategy() {
   // Show loading state
   const button = document.querySelector('.primary-btn');
@@ -221,13 +221,11 @@ async function generateStrategy() {
 }
 
 function calculateMatchPercentage(riskScore) {
-  // Calculate match percentage based on risk score and strategy
   const risk = parseInt(document.getElementById('risk').value);
   const ret = parseInt(document.getElementById('ret').value);
   
   let baseScore = 85;
   
-  // Adjust based on risk alignment
   const riskVal = parseFloat(riskScore);
   if (riskVal <= 0.33 && risk <= 4) baseScore += 10;
   else if (riskVal > 0.66 && risk >= 8) baseScore += 10;
@@ -241,66 +239,35 @@ function updateRiskScore(data) {
   const scoreElement = document.getElementById('risk-score');
   const levelElement = document.getElementById('risk-level');
   const descriptionElement = document.getElementById('risk-description');
+  const riskCard = document.querySelector('.risk-card');
   
-  // Update score
-  scoreElement.textContent = score.toFixed(3);
+  // Update score with animation
+  animateValue(scoreElement, 0, score, 1000);
   
   // Update level and colors
-  let level, color, description;
+  let level, colorClass, description;
   
   if (score <= 0.33) {
-    level = "LOW";
-    color = "#22c55e";
-    description = "Conservative profile ideal for capital preservation and stable returns.";
+    level = "LOW RISK";
+    colorClass = "risk-low";
+    description = "Conservative profile focused on capital preservation with minimal volatility.";
   } else if (score <= 0.66) {
-    level = "MODERATE";
-    color = "#eab308";
-    description = "Balanced profile suitable for growth-oriented strategies with controlled risk.";
+    level = "MODERATE RISK";
+    colorClass = "risk-moderate";
+    description = "Balanced approach seeking growth while managing risk through diversification.";
   } else {
-    level = "HIGH";
-    color = "#ef4444";
-    description = "Aggressive profile optimized for maximum growth potential with higher volatility.";
+    level = "HIGH RISK";
+    colorClass = "risk-high";
+    description = "Growth-oriented strategy accepting higher volatility for potential long-term returns.";
   }
   
+  // Update level element
   levelElement.textContent = level;
-  levelElement.style.background = color + "20";
-  levelElement.style.color = color;
-  levelElement.style.border = `1px solid ${color}40`;
   
-  descriptionElement.textContent = description;
+  // Update badge styling
+  levelElement.className = 'risk-badge ' + colorClass;
   
-  // Update circular indicator
-  updateCircularScore(score);
-}
-
-function updateCircularScore(score) {
-  const circularScore = document.querySelector('.circular-score');
-  
-  // Remove any existing indicator
-  const existingIndicator = document.querySelector('.score-indicator');
-  if (existingIndicator) existingIndicator.remove();
-  
-  // Create new indicator
-  const angle = score * 360;
-  const indicator = document.createElement('div');
-  indicator.className = 'score-indicator';
-  indicator.style.cssText = `
-    position: absolute;
-    top: -3px;
-    left: 50%;
-    width: 3px;
-    height: 15px;
-    background: var(--text-main);
-    transform-origin: bottom center;
-    transform: translateX(-50%) rotate(${angle}deg);
-    border-radius: 2px;
-    z-index: 10;
-  `;
-  
-  circularScore.appendChild(indicator);
-  
-  // Update color based on score
-  const scoreElement = document.querySelector('.score-value');
+  // Update score color
   if (score <= 0.33) {
     scoreElement.style.color = '#22c55e';
   } else if (score <= 0.66) {
@@ -308,6 +275,59 @@ function updateCircularScore(score) {
   } else {
     scoreElement.style.color = '#ef4444';
   }
+  
+  descriptionElement.textContent = description;
+  
+  // Update circular indicator
+  updateCircularScore(score);
+}
+
+function animateValue(element, start, end, duration) {
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    const currentValue = start + progress * (end - start);
+    element.textContent = currentValue.toFixed(3);
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    }
+  };
+  window.requestAnimationFrame(step);
+}
+
+function updateCircularScore(score) {
+  const circularScore = document.querySelector('.circular-score');
+  
+  // Remove any existing indicator
+  const existingIndicator = document.querySelector('.risk-indicator');
+  if (existingIndicator) existingIndicator.remove();
+  
+  // Create new indicator with animation
+  const angle = score * 360;
+  const indicator = document.createElement('div');
+  indicator.className = 'risk-indicator';
+  
+  // Apply color based on score
+  if (score <= 0.33) {
+    indicator.style.background = '#22c55e';
+  } else if (score <= 0.66) {
+    indicator.style.background = '#eab308';
+  } else {
+    indicator.style.background = '#ef4444';
+  }
+  
+  // Set initial position and animate
+  indicator.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+  
+  circularScore.appendChild(indicator);
+  
+  // Add score animation
+  const scoreElement = document.querySelector('.score-value');
+  scoreElement.classList.add('score-pulse');
+  setTimeout(() => {
+    scoreElement.classList.remove('score-pulse');
+  }, 600);
 }
 
 function updateSHAPChart(factors) {
@@ -472,24 +492,8 @@ function updateFactorsTable(factors, inputs) {
     
     tbody.appendChild(row);
   });
-  
-  // Add some CSS for the hint text
-  if (!document.querySelector('#factor-hint-style')) {
-    const style = document.createElement('style');
-    style.id = 'factor-hint-style';
-    style.textContent = `
-      .factor-hint {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        margin-top: 4px;
-        line-height: 1.3;
-      }
-    `;
-    document.head.appendChild(style);
-  }
 }
 
-// Your existing functions - keep them exactly as they were
 function renderProjection(funds) {
   const avg3y = funds.reduce((a, b) => a + b.returns[2], 0) / funds.length;
   const ctx = document.getElementById('mainChart').getContext('2d');
@@ -578,57 +582,9 @@ function renderFunds(funds) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
-  // Add spinner animation for loader
-  if (!document.querySelector('#spinner-style')) {
-    const style = document.createElement('style');
-    style.id = 'spinner-style';
-    style.textContent = `
-      .spin {
-        animation: spin 1s linear infinite;
-      }
-      @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-      }
-    `;
-    document.head.appendChild(style);
-  }
-  
   // Pre-select some values for better demo
   document.getElementById('risk').value = 7;
   document.getElementById('d-risk').textContent = '7/10';
   
   feather.replace();
-  
-  // Add debug button if needed (remove in production)
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    const debugBtn = document.createElement('button');
-    debugBtn.textContent = 'Debug API';
-    debugBtn.style.cssText = `
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 8px 12px;
-      background: #666;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-      z-index: 1000;
-    `;
-    debugBtn.onclick = async () => {
-      const inputs = {
-        age: parseInt(document.getElementById('age').value),
-        risk_appetite: parseInt(document.getElementById('risk').value),
-        investment_duration: parseInt(document.getElementById('horizon').value),
-        liquidity_needs: parseInt(document.getElementById('liq').value),
-        expected_returns: parseInt(document.getElementById('ret').value)
-      };
-      console.log('Debug - API Inputs:', inputs);
-      const result = await callRiskAPI(inputs);
-      console.log('Debug - API Result:', result);
-    };
-    document.body.appendChild(debugBtn);
-  }
 });
