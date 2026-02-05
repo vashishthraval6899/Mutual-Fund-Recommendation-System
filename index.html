@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>InvestWise | Mutual Fund Recommendation System</title>
-  <link rel="stylesheet" href="styles.css">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
   <script src="https://unpkg.com/feather-icons"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -55,38 +55,56 @@
     </div>
   </aside>
 
-  <!-- CONTENT -->
+  <!-- MAIN CONTENT -->
   <main class="content">
-
     <div id="hero-view" class="hero">
       <div class="hero-inner">
         <i data-feather="bar-chart-2" class="hero-icon"></i>
         <h2>Predictive Portfolio Analysis</h2>
-        <p>Discover top-performing mutual funds with explainable ML insights.</p>
+        <p>Discover top-performing mutual funds filtered by risk-adjusted quality scores.</p>
       </div>
     </div>
 
     <div id="results-view" class="dashboard hidden">
 
-      <!-- EXPLAINABILITY -->
+      <!-- EXISTING COMPONENTS STAY -->
+      <section class="projection-section">
+        <div class="chart-box">
+          <h3>Simulated Compound Growth (₹1L Base)</h3>
+          <div class="canvas-wrap"><canvas id="mainChart"></canvas></div>
+        </div>
+        <div class="values-box">
+          <h3>Year-on-Year Value</h3>
+          <div id="yoy-list" class="yoy-list"></div>
+        </div>
+      </section>
+
+      <!-- ✅ NEW EXPLAINABILITY -->
       <section class="explain-section">
         <div class="explain-box">
           <h3>Why this Risk Score?</h3>
-          <p class="explain-subtitle">Key factors influencing your investment risk.</p>
+          <p class="explain-subtitle">Key drivers behind your investment risk.</p>
 
           <div class="risk-score-row">
             <div class="risk-score-card">
               <span>Risk Score</span>
               <h2 id="risk-score-val">--</h2>
             </div>
-
             <div class="risk-graph-wrap">
               <canvas id="riskExplainChart"></canvas>
             </div>
           </div>
 
-          <div class="explain-list" id="explain-list"></div>
+          <div id="explain-list" class="explain-list"></div>
         </div>
+      </section>
+
+      <!-- EXISTING FUNDS -->
+      <section class="funds-section">
+        <div class="section-title">
+          <h3>Top 8 Quantitative Fund Picks</h3>
+        </div>
+        <div class="fund-grid" id="fund-grid"></div>
       </section>
 
     </div>
