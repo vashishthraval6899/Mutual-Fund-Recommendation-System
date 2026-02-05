@@ -88,7 +88,7 @@
       <!-- RISK & SHAP SECTION -->
       <section class="risk-shap-section hidden" id="risk-section">
         <div class="section-header">
-          <h3>Risk Analysis & Feature Impact</h3>
+          <h3>📊 Risk Analysis & Feature Impact</h3>
           <p>Understand how each factor influences your risk score</p>
         </div>
 
@@ -155,6 +155,28 @@
         <div class="section-title">
           <h3>Top 6 Quantitative Fund Picks</h3>
           <p>The highest quality assets within the target cluster based on volatility and yield.</p>
+          
+          <!-- Quality Formula Explanation -->
+          <div class="quality-formula">
+            <div class="formula-header">
+              <i data-feather="award"></i>
+              <span>Quality Score Formula</span>
+            </div>
+            <div class="formula-details">
+              <p>Funds are ranked using a composite quality score calculated from multiple factors:</p>
+              <div class="formula-components">
+                <div class="component"><span class="weight">25%</span> Sharpe & Sortino Score</div>
+                <div class="component"><span class="weight">20%</span> Return-Risk Ratio</div>
+                <div class="component"><span class="weight">15%</span> Fund Strength Metrics</div>
+                <div class="component"><span class="weight">10%</span> Alpha-Beta Score</div>
+                <div class="component"><span class="weight">10%</span> 3-12 Month Momentum</div>
+                <div class="component"><span class="weight">10%</span> 6-36 Month Momentum</div>
+                <div class="component"><span class="weight">5%</span> Cost Efficiency</div>
+                <div class="component"><span class="weight penalty">-5%</span> Volatility Penalty</div>
+              </div>
+              <p class="formula-note">Scores are normalized to 0-100% scale, with higher scores indicating better risk-adjusted performance.</p>
+            </div>
+          </div>
         </div>
         <div class="fund-grid" id="fund-grid"></div>
       </section>
