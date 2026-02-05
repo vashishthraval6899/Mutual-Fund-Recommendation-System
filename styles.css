@@ -124,3 +124,287 @@ body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(
   .projection-section { grid-template-columns: 1fr; }
   .fund-grid { grid-template-columns: 1fr; }
 }
+
+/* ===== RISK & SHAP SECTION ===== */
+.risk-shap-section {
+  margin: 40px 0;
+  padding: 0;
+}
+
+.section-header {
+  margin-bottom: 30px;
+}
+
+.section-header h3 {
+  font-size: 1.5rem;
+  margin: 0 0 8px 0;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-header p {
+  color: var(--text-muted);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.risk-shap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+  .risk-shap-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Risk Score Card */
+.risk-card {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  border: 1px solid #e2e8f0;
+}
+
+.risk-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.risk-header h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.risk-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.score-container {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.circular-score {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.circular-score::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    #22c55e 0% 33%,
+    #eab308 33% 66%,
+    #ef4444 66% 100%
+  );
+  mask: radial-gradient(circle at center, transparent 55px, black 56px);
+  -webkit-mask: radial-gradient(circle at center, transparent 55px, black 56px);
+}
+
+.score-value {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.score-label {
+  position: absolute;
+  top: calc(50% + 25px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.risk-info {
+  flex: 1;
+}
+
+.risk-info p {
+  color: var(--text-muted);
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+.risk-bands {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.band {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot.low { background: #22c55e; }
+.dot.moderate { background: #eab308; }
+.dot.high { background: #ef4444; }
+
+/* SHAP Card */
+.shap-card {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.shap-header {
+  margin-bottom: 20px;
+}
+
+.shap-header h4 {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.shap-header p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.chart-container {
+  flex: 1;
+  min-height: 250px;
+}
+
+/* Factors Table */
+.factors-card {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  border: 1px solid #e2e8f0;
+}
+
+.table-header {
+  margin-bottom: 20px;
+}
+
+.table-header h4 {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.table-header p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+#factors-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#factors-table th {
+  text-align: left;
+  padding: 14px 16px;
+  background: #f8fafc;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+#factors-table td {
+  padding: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.9rem;
+}
+
+#factors-table tr:last-child td {
+  border-bottom: none;
+}
+
+#factors-table .factor-name {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+#factors-table .factor-value {
+  background: #eff6ff;
+  color: var(--accent);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+#factors-table .impact-positive {
+  color: #166534;
+  font-weight: 700;
+}
+
+#factors-table .impact-negative {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+#factors-table .direction {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+#factors-table .direction.increase {
+  background: #dcfce7;
+  color: #166534;
+}
+
+#factors-table .direction.decrease {
+  background: #fee2e2;
+  color: #dc2626;
+}
