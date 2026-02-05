@@ -1,10 +1,11 @@
-let riskChart = null;
-
 const BACKEND_URL = "https://mf-recommender-backend-production.up.railway.app";
 
-const sliders = ["age", "risk", "horizon", "liq", "ret"];
-sliders.forEach(s => {
-  document.getElementById(s).addEventListener('input', e => {
+let mainChart = null;
+let riskChart = null;
+
+// ---------- UI SLIDERS ----------
+["age", "risk", "horizon", "liq", "ret"].forEach(s => {
+  document.getElementById(s).addEventListener("input", e => {
     let v = e.target.value;
     let lbl = v;
     if (s === "horizon") lbl += "Y";
@@ -14,19 +15,44 @@ sliders.forEach(s => {
   });
 });
 
-function humanize(feature, effect) {
-  const map = {
-    age: "Your age",
-    risk_appetite: "Your risk appetite",
-    investment_duration: "Your long-term investment horizon",
-    liquidity_needs: "Your liquidity preference",
-    expected_returns: "Your return expectations"
+// ---------- MAIN ACTION ----------
+async function generateStrategy() {
+  const payload = {
+    age: +age.value,
+    risk_appetite: +risk.value,
+    investment_duration: +horizon.value,
+    liquidity_needs: +liq.value,
+    expected_returns: +ret.value
   };
-  return `${map[feature]} ${effect === "increase"
-    ? "pushes your risk higher"
-    : "reduces your overall risk"}.`;
+
+  document.getElementById("hero-view").style.display = "none";
+  document.getElementById("results-view").classList.remove("hidden");
+
+  // 🔵 1. Call explain-risk
+  const explainRes = await fetch(`${BACKEND_URL}/explain-risk`, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(payload)
+  });
+
+  const explainData = await explainRes.json();
+  renderExplainability(explainData);
+
+  // 🔵 2. Use RISK SCORE to drive UI logic
+  const r = explainData.risk_score;
+
+  let cluster = "Growth & Stability";
+  if (r < 0.35) cluster = "Capital Preservation";
+  else if (r > 0.7) cluster = "High-Alpha Aggressive";
+
+  const funds = FUND_DATA[cluster];
+  renderProjection(funds);
+  renderFunds(funds);
+
+  feather.replace();
 }
 
+// ---------- EXPLAINABILITY ----------
 function renderExplainability(data) {
   document.getElementById("risk-score-val").innerText = data.risk_score.toFixed(2);
 
@@ -36,14 +62,15 @@ function renderExplainability(data) {
   data.top_factors.forEach(f => {
     list.innerHTML += `
       <div class="explain-item">
-        <b>${f.feature.replace("_"," ")}</b>: ${humanize(f.feature, f.effect)}
-      </div>
-    `;
+        <b>${f.feature.replace("_"," ")}</b> ${
+          f.effect === "increase" ? "pushes risk higher" : "reduces risk"
+        }
+      </div>`;
   });
 
   const ctx = document.getElementById("riskExplainChart").getContext("2d");
-  const labels = data.top_factors.map(f => f.feature.replace("_"," "));
-  const impacts = data.top_factors.map(f => Math.abs(f.impact));
+  const labels = data.top_factors.map(f => f.feature);
+  const values = data.top_factors.map(f => Math.abs(f.impact));
 
   if (riskChart) riskChart.destroy();
   riskChart = new Chart(ctx, {
@@ -51,7 +78,7 @@ function renderExplainability(data) {
     data: {
       labels,
       datasets: [{
-        data: impacts,
+        data: values,
         backgroundColor: "#2563eb",
         borderRadius: 8
       }]
@@ -62,27 +89,4 @@ function renderExplainability(data) {
       scales: { y: { display: false } }
     }
   });
-}
-
-async function generateStrategy() {
-  const payload = {
-    age: +document.getElementById("age").value,
-    risk_appetite: +document.getElementById("risk").value,
-    investment_duration: +document.getElementById("horizon").value,
-    liquidity_needs: +document.getElementById("liq").value,
-    expected_returns: +document.getElementById("ret").value
-  };
-
-  document.getElementById("hero-view").style.display = "none";
-  document.getElementById("results-view").classList.remove("hidden");
-
-  const res = await fetch(`${BACKEND_URL}/explain-risk`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
-
-  const data = await res.json();
-  console.log("Explain response:", data);
-  renderExplainability(data);
 }
