@@ -23,27 +23,57 @@
 
     <div class="control-panel">
       <div class="group">
-        <div class="header"><span>Age</span> <b id="d-age">30</b></div>
+        <div class="header">
+          <span>Age</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="info-btn" onclick="showSliderInfo('age')">i</button>
+            <b id="d-age">30</b>
+          </div>
+        </div>
         <input type="range" id="age" min="18" max="75" value="30" class="slider">
       </div>
 
       <div class="group">
-        <div class="header"><span>Risk Appetite</span> <b id="d-risk">7/10</b></div>
+        <div class="header">
+          <span>Risk Appetite</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="info-btn" onclick="showSliderInfo('risk')">i</button>
+            <b id="d-risk">7/10</b>
+          </div>
+        </div>
         <input type="range" id="risk" min="1" max="10" value="7" class="slider risk-accent">
       </div>
 
       <div class="group">
-        <div class="header"><span>Investment Duration</span> <b id="d-horizon">5Y</b></div>
+        <div class="header">
+          <span>Investment Duration</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="info-btn" onclick="showSliderInfo('horizon')">i</button>
+            <b id="d-horizon">5Y</b>
+          </div>
+        </div>
         <input type="range" id="horizon" min="1" max="5" value="5" class="slider">
       </div>
 
       <div class="group">
-        <div class="header"><span>Liquidity Need</span> <b id="d-liq">3/10</b></div>
+        <div class="header">
+          <span>Liquidity Need</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="info-btn" onclick="showSliderInfo('liq')">i</button>
+            <b id="d-liq">3/10</b>
+          </div>
+        </div>
         <input type="range" id="liq" min="1" max="10" value="3" class="slider">
       </div>
 
       <div class="group">
-        <div class="header"><span>Expected Returns</span> <b id="d-ret">15%</b></div>
+        <div class="header">
+          <span>Expected Returns</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="info-btn" onclick="showSliderInfo('ret')">i</button>
+            <b id="d-ret">15%</b>
+          </div>
+        </div>
         <input type="range" id="ret" min="4" max="40" value="15" class="slider">
       </div>
 
@@ -89,7 +119,6 @@
       <section class="risk-shap-section hidden" id="risk-section">
         <div class="section-header">
           <h3>Risk Analysis & Feature Impact</h3>
-          <p>Understand how each factor influences your risk score</p>
         </div>
 
         <div class="risk-shap-grid">
@@ -105,7 +134,7 @@
                 <div class="score-label">Risk Score</div>
               </div>
               <div class="risk-info">
-                <p id="risk-description">Your personalized risk score based on all input parameters.</p>
+                <p id="risk-description"></p>
                 <div class="risk-bands">
                   <div class="band"><span class="dot low"></span> Low Risk: 0-0.33</div>
                   <div class="band"><span class="dot moderate"></span> Moderate Risk: 0.34-0.66</div>
@@ -119,7 +148,6 @@
           <div class="shap-card">
             <div class="shap-header">
               <h4>Feature Impact</h4>
-              <p>How each factor affects your risk score</p>
             </div>
             <div class="chart-container">
               <canvas id="shapChart"></canvas>
@@ -131,7 +159,6 @@
         <div class="factors-card">
           <div class="table-header">
             <h4>Top Contributing Factors</h4>
-            <p>Detailed breakdown of feature impacts</p>
           </div>
           <div class="table-responsive">
             <table id="factors-table">
