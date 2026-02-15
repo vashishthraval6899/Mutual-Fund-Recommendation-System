@@ -104,8 +104,6 @@ body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(
 .m-item label { font-size: 0.65rem; color: var(--text-muted); display: block; margin-bottom: 4px; }
 .m-item div { font-weight: 700; font-size: 0.9rem; color: var(--text-main); }
 
-.f-insight { background: #f0fdf4; border-left: 4px solid #22c55e; padding: 15px; border-radius: 8px; font-size: 0.85rem; line-height: 1.5; color: #166534; }
-
 /* Quality Score Styling */
 .f-cat-row {
   display: flex;
