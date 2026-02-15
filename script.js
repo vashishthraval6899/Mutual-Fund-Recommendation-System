@@ -571,7 +571,6 @@ function renderFunds(funds) {
             <div class="m-item"><label>Sharpe Ratio</label><div>${f.sharpe}</div></div>
           </div>
         </div>
-        <div class="f-insight">${f.insight}</div>
       </div>
     `;
     
