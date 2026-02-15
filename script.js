@@ -583,11 +583,11 @@ document.addEventListener('DOMContentLoaded', function() {
 // Slider Information Tooltips
 function showSliderInfo(sliderId) {
   const infoMessages = {
-    'age': 'Your age affects risk capacity - younger investors can typically take more risk',
-    'risk': 'Higher risk appetite means you\'re comfortable with market ups and downs',
-    'horizon': 'Longer investment duration allows for recovery from market downturns',
-    'liq': 'Lower liquidity needs mean you can invest in less accessible but higher-yield options',
-    'ret': 'Higher expected returns typically require accepting more risk'
+    'age': 'Your current age',
+    'risk': 'Your comfort with investment risk',
+    'horizon': 'How long you\'ll stay invested',
+    'liq': 'How soon you may need the money',
+    'ret': 'Your target yearly return'
   };
 
   // Remove any existing tooltip
