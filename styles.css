@@ -58,8 +58,30 @@ body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(
 }
 
 .control-panel { display: flex; flex-direction: column; gap: 28px; }
-.group .header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; font-weight: 600; color: var(--text-muted); }
-.group b { color: var(--accent); background: #eff6ff; padding: 2px 8px; border-radius: 6px; }
+
+/* Updated header layout for cleaner design */
+.group .header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  margin-bottom: 10px; 
+  font-size: 0.9rem; 
+  font-weight: 600; 
+  color: var(--text-muted); 
+}
+
+.slider-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.group b { 
+  color: var(--accent); 
+  background: #eff6ff; 
+  padding: 2px 8px; 
+  border-radius: 6px; 
+}
 
 .slider { width: 100%; -webkit-appearance: none; height: 6px; background: #e2e8f0; border-radius: 10px; }
 .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: white; border: 2px solid var(--accent); border-radius: 50%; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
@@ -68,22 +90,25 @@ body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(
 .primary-btn { background: var(--bg-dark); color: white; border: none; padding: 18px; border-radius: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
 .primary-btn:hover { background: var(--accent); transform: translateY(-2px); }
 
-/* Info Button Styles */
+/* Elegant Info Button Styles - Smaller and cleaner */
 .info-btn {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #e2e8f0;
   border: none;
   color: #64748b;
-  font-weight: 700;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 11px;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   font-family: 'Plus Jakarta Sans', sans-serif;
+  line-height: 1;
+  padding: 0;
+  margin-left: 4px;
 }
 
 .info-btn:hover {
@@ -92,34 +117,38 @@ body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(
   transform: scale(1.1);
 }
 
-/* Tooltip Styles */
+/* Tooltip Styles - Clean and minimal */
 .info-tooltip {
   position: fixed;
   background: #1e293b;
   color: white;
-  padding: 12px 16px;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  max-width: 250px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 400;
+  max-width: 220px;
   z-index: 1000;
-  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 20px -4px rgba(0,0,0,0.2);
   pointer-events: none;
   animation: fadeIn 0.2s ease;
+  letter-spacing: 0.2px;
+  line-height: 1.4;
+  white-space: nowrap;
 }
 
 .info-tooltip::before {
   content: '';
   position: absolute;
-  top: -6px;
+  top: -4px;
   left: 20px;
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   background: #1e293b;
   transform: rotate(45deg);
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
+  from { opacity: 0; transform: translateY(3px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
