@@ -264,15 +264,15 @@ function updateRiskScore(data) {
   if (score <= 0.33) {
     level = "LOW RISK";
     colorClass = "risk-low";
-    description = "Conservative profile focused on capital preservation with minimal volatility.";
+    description = ""; // Removed description text
   } else if (score <= 0.66) {
     level = "MODERATE RISK";
     colorClass = "risk-moderate";
-    description = "Balanced approach seeking growth while managing risk through diversification.";
+    description = ""; // Removed description text
   } else {
     level = "HIGH RISK";
     colorClass = "risk-high";
-    description = "Growth-oriented strategy accepting higher volatility for potential long-term returns.";
+    description = ""; // Removed description text
   }
   
   // Update level element
@@ -458,40 +458,14 @@ function updateFactorsTable(factors, inputs) {
     }
   };
   
-  // Interpretation mapping
-  const getInterpretation = (feature, value, effect) => {
-    switch(feature) {
-      case 'risk_appetite':
-        return value > 7 ? 'High risk tolerance indicates comfort with volatility' :
-               value > 4 ? 'Moderate risk tolerance suggests balanced approach' :
-               'Low risk tolerance favors conservative investments';
-      case 'investment_duration':
-        return value > 3 ? 'Longer duration allows for higher risk-taking' :
-               'Short duration requires liquidity and stability';
-      case 'liquidity_needs':
-        return value > 7 ? 'High liquidity need requires accessible assets' :
-               'Lower liquidity need allows for higher-yield investments';
-      case 'expected_returns':
-        return value > 15 ? 'High return expectations require accepting higher risk' :
-               value > 10 ? 'Moderate return expectations with balanced risk' :
-               'Conservative return expectations prioritize safety';
-      case 'age':
-        return value < 30 ? 'Younger investors typically have higher risk capacity' :
-               value < 50 ? 'Mid-age investors balance growth and preservation' :
-               'Older investors generally prefer capital preservation';
-      default:
-        return effect === 'increase' ? 'Increases overall risk' : 'Decreases overall risk';
-    }
-  };
-  
-  // Add rows
+  // Add rows without factor hints
   factors.forEach(factor => {
     const row = document.createElement('tr');
     
     row.innerHTML = `
       <td>
         <div class="factor-name">${featureNames[factor.feature] || factor.feature}</div>
-        <div class="factor-hint">${getInterpretation(factor.feature, factor.value, factor.effect)}</div>
+        <div class="factor-hint" style="display: none;"></div>
       </td>
       <td><span class="factor-value">${formatValue(factor.feature, factor.value)}</span></td>
       <td class="${factor.impact > 0 ? 'impact-positive' : 'impact-negative'}">
@@ -571,7 +545,7 @@ function renderFunds(funds) {
             <div class="m-item"><label>Sharpe Ratio</label><div>${f.sharpe}</div></div>
           </div>
         </div>
-        <div class="f-insight">${f.insight}</div>
+        <!-- Removed insight section -->
       </div>
     `;
     
@@ -604,4 +578,52 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('d-risk').textContent = '7/10';
   
   feather.replace();
+});
+
+// Slider Information Tooltips
+function showSliderInfo(sliderId) {
+  const infoMessages = {
+    'age': 'Your age affects risk capacity - younger investors can typically take more risk',
+    'risk': 'Higher risk appetite means you\'re comfortable with market ups and downs',
+    'horizon': 'Longer investment duration allows for recovery from market downturns',
+    'liq': 'Lower liquidity needs mean you can invest in less accessible but higher-yield options',
+    'ret': 'Higher expected returns typically require accepting more risk'
+  };
+
+  // Remove any existing tooltip
+  const existingTooltip = document.querySelector('.info-tooltip');
+  if (existingTooltip) {
+    existingTooltip.remove();
+  }
+
+  // Create new tooltip
+  const tooltip = document.createElement('div');
+  tooltip.className = 'info-tooltip';
+  tooltip.textContent = infoMessages[sliderId];
+
+  // Position tooltip near the button
+  const button = event.target;
+  const rect = button.getBoundingClientRect();
+  
+  tooltip.style.left = rect.left + 'px';
+  tooltip.style.top = (rect.bottom + 10) + 'px';
+
+  document.body.appendChild(tooltip);
+
+  // Remove tooltip after 3 seconds
+  setTimeout(() => {
+    if (tooltip && tooltip.parentNode) {
+      tooltip.remove();
+    }
+  }, 3000);
+}
+
+// Remove tooltip when clicking elsewhere
+document.addEventListener('click', function(e) {
+  if (!e.target.classList.contains('info-btn')) {
+    const tooltip = document.querySelector('.info-tooltip');
+    if (tooltip) {
+      tooltip.remove();
+    }
+  }
 });
