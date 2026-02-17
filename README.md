@@ -24,7 +24,6 @@ Funds are segmented into dynamic clusters:
 ## 💻 Frontend (Web Interface)
 - Built with **HTML/CSS/JS**.
 - Hosted on **Netlify**.
-- Consumes the **FastAPI Risk Engine** (Repo 4) to display recommendations.
 
 ## 📂 Project Structure
 ```bash
