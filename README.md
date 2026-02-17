@@ -1,13 +1,35 @@
-🎯 Mutual Fund Recommendation System
+# 📈 InvestWise: Fund Analysis & Clustering Engine
 
-An end-to-end machine-learning–powered system that clusters mutual funds based on risk, returns, volatility, momentum, and other quantitative financial factors — and recommends the best funds to investors according to their risk appetite.
+![Python](https://img.shields.io/badge/Python-Data_Science-blue)
+![Scikit-Learn](https://img.shields.io/badge/Sklearn-KMeans-orange)
+![Netlify](https://img.shields.io/badge/Deployment-Netlify-00C7B7)
 
-🚀 Project Overview
+> **The "Market Intelligence" layer of the InvestWise system, handling fund segmentation and user interface.**
 
-This project builds an intelligent Mutual Fund Recommendation Engine using:
-- Advanced financial feature engineering
-- Unsupervised ML (KMeans, GMM, Agglomerative, DBSCAN)
-- Risk–Return profiling
-- Fund ranking using Quality Score
-  
-It groups 1158 mutual funds into smart investor-friendly clusters and recommends the top funds in each.
+## 🧠 The Unsupervised Logic
+Instead of relying on generic labels like "Large Cap," this module analyzes **1,000+ Mutual Funds** using hard mathematical metrics.
+
+### Feature Engineering
+We engineered composite financial features to capture true behavior:
+- **Risk-Adjusted Strength:** Combination of Sharpe, Sortino, and Alpha.
+- **Momentum:** 1Y and 3Y return trajectories.
+- **Volatility Profile:** Standard Deviation relative to Category benchmarks.
+
+### Clustering (K-Means)
+Funds are segmented into dynamic clusters:
+- **Cluster 0 (Safe Harbors):** Low Volatility, Stable Returns.
+- **Cluster 1 (Growth Engines):** High Alpha, High Beta.
+- **Cluster 2 (Underperformers):** High Expense Ratio, Negative Alpha.
+
+## 💻 Frontend (Web Interface)
+- Built with **HTML/CSS/JS**.
+- Hosted on **Netlify**.
+- Consumes the **FastAPI Risk Engine** (Repo 4) to display recommendations.
+
+## 📂 Project Structure
+```bash
+├── Mutual_Fund_Recommendation_System.ipynb/           # Jupyter Notebook for EDA and Clustering
+├── Top_Funds_Cluster_Wise.csv/              # Clustered Mutual Fund Data
+├── index.html/     # Frontend code deployed to Netlify
+├── script.js/     # Frontend code deployed to Netlify
+├── styles.css/     # Frontend code deployed to Netlify
